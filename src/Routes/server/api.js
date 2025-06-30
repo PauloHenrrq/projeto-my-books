@@ -5,3 +5,5 @@ export async function APIBooks(query = 'comedy') {
     const data = await res.json()
     return data.items || [];
 }
+
+// https://www.googleapis.com/books/v1/volumes?q=comedy&maxResults=20&startIndex=18 - Exemplo de pesquisa dinâmica, 1-19, 20-39...

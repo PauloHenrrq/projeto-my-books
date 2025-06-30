@@ -1,0 +1,1 @@
+// Componente filho com as informações expandidas e específicas do livro

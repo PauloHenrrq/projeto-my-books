@@ -1,0 +1,1 @@
+// Componente filho para a geração de Card
