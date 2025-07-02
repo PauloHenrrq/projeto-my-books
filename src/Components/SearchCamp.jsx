@@ -1,1 +1,0 @@
-// Componente com o campo de pesquisa e filtragem da pesquisa
