@@ -2,8 +2,8 @@ import React from "react";
 
 export async function APIBooks(queryFilter, query) {
   try {
-    if (query.length < 2) {
-      throw new Error(`a pesquisa deve ter no mínimo 2 caracteres`);
+    if (!query) {
+      throw new Error("a pesquisa nao deve ser vazia");
     }
     const res = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${queryFilter}${encodeURIComponent(
@@ -16,11 +16,12 @@ export async function APIBooks(queryFilter, query) {
     }
 
     const data = await res.json();
-    //teste
-    console.log("pesquisa deu certo");
+
+    console.log("pesquisa deu certo"); // teste
     return data.items || [];
   } catch (error) {
-    console.error("Ocorreu um erro ao buscar os livros:", error.message);
+    console.error("Ocorreu um erro ao buscar os livros:", error.message); // teste
+    throw new Error(error.message);
   }
 }
 

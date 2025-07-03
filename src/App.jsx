@@ -1,14 +1,8 @@
-import { React } from 'react'
-import './App.css'
+import { React } from "react";
+import "./App.css";
 
-import BooksMain from './Components/BooksMain.jsx'
-
-function App () {
-  return (
-    <>
-      <BooksMain />
-    </>
-  )
+function App() {
+  return <></>;
 }
 
-export default App
+export default App;

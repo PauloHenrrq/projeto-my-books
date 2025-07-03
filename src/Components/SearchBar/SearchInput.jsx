@@ -17,7 +17,7 @@ function SerachInput({ value, onChange, onSearch }) {
       />
       <MagnifyingGlassIcon
         onClick={onSearch}
-        className="w-5 h-5 text-[var(--azul-vivido)] cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2"
+        className="w-5 h-5 text-[var(--azul-claro)] hover:text-[var(--azul-vivido)] transition-colors duration-300 cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2"
       />
     </div>
   );

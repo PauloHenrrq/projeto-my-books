@@ -1,11 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import Books from "./Pages/Books";
 import "./index.css";
-import App from "./App.jsx";
-import SerachInput from "./Components/SearchBar/SearchInput.jsx";
-import SearchBar from "./Components/SearchBar/SearchBar.jsx";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <SearchBar />
+    <Books></Books>
   </StrictMode>
 );

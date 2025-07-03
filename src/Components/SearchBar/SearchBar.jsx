@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import SerachInput from "./SearchInput";
 import FilterDropdown from "./FilterDropdown";
-import { APIBooks } from "../../Routes/server/api";
+import { BookSearchContext } from "../../Context/BookSearchContextDefinition";
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [queryFilterOption, setFilterQueryOption] = useState("Todos");
+  const { performSearch } = useContext(BookSearchContext);
 
   const handleQueryOption = (optionText) => {
     setFilterQueryOption(optionText);
-    // teste console
-    console.log(optionText);
+
+    console.log(optionText); //teste
   };
 
   const handleQueryInput = (e) => {
@@ -18,9 +19,6 @@ const SearchBar = () => {
   };
 
   const handleSearch = () => {
-    //teste console
-    console.log("pesquisando  " + query + " " + queryFilterOption);
-
     let queryFilterApi = queryFilterOption;
     let queryApi = query.trim();
 
@@ -38,7 +36,10 @@ const SearchBar = () => {
         queryFilterApi = "";
         break;
     }
-    APIBooks(queryFilterApi, queryApi);
+    if (queryApi.length > 0) {
+      console.log("pesquisando  " + queryApi + " filterOption:" + queryFilterApi); // teste
+      performSearch(queryFilterApi, queryApi);
+    }
   };
 
   return (
