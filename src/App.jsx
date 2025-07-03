@@ -1,10 +1,12 @@
 import { React } from 'react'
 import './App.css'
 
+import BooksMain from './Components/BooksMain.jsx'
+
 function App () {
   return (
     <>
-      <p className='bg-red-800 text-center text-white'>Teste</p>
+      <BooksMain />
     </>
   )
 }

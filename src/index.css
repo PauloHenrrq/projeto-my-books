@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --cinza-claro: #f9fafb;
@@ -6,4 +6,33 @@
   --azul-claro: #93c5fd;
   --texto: #111827;
   --titulo: #1f2937;
+}
+
+.title-h1 {
+  @apply text-xl text-[var(--titulo)]
+}
+
+.title-h2 {
+  @apply text-lg text-[var(--titulo)]
+}
+
+.title-h3 {
+  @apply text-sm text-[var(--titulo)]
+}
+
+.text-large {
+  @apply text-xl text-[var(--texto)]
+}
+
+.text-medium {
+  @apply text-lg text-[var(--texto)]
+}
+
+.text-small {
+  @apply text-sm text-[var(--texto)]
+}
+
+body {
+  font-family: "Nunito Sans", sans-serif;
+  background-color: #e7e7e7;
 }
