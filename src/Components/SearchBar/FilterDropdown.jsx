@@ -1,19 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
-function FilterDropdown() {
+function FilterDropdown({ value, onClick }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [queryFilterOption, setQueryOption] = useState("Todos");
-  const queryFilterOptions = ["Todos", "Gênero", "Autor", "Título"];
+  const queryFilterOptions = ["Todos", "Assunto", "Autor", "Título"];
 
   const dropdownRef = useRef();
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
-
-  const selectOption = (selectedOption) => {
-    setQueryOption(selectedOption);
-    setIsOpen(false);
-  };
 
   useEffect(() => {
     const handler = (event) => {
@@ -33,7 +27,7 @@ function FilterDropdown() {
           isOpen ? "bg-gray-200" : "bg-white text-[var(--titulo)]"
         }  border border-gray-300 rounded-md cursor-pointer`}
       >
-        {queryFilterOption}
+        {value}
         <span className="ml-2 w-5 h-5">
           {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
         </span>
@@ -44,7 +38,10 @@ function FilterDropdown() {
           {queryFilterOptions.map((option) => (
             <li
               key={option}
-              onClick={() => selectOption(option)}
+              onClick={() => {
+                setIsOpen(false);
+                onClick(option);
+              }}
               className="cursor-pointer w-full px-4 py-2 hover:bg-gray-200 text-[var(--texto)]"
             >
               {option}
