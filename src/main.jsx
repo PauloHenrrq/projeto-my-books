@@ -6,6 +6,6 @@ import SerachInput from "./Components/SearchBar/SearchInput.jsx";
 import SearchBar from "./Components/SearchBar/SearchBar.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <SearchBar />
+    <App />
   </StrictMode>
 );
