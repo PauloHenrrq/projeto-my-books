@@ -1,90 +1,93 @@
-import React, { useContext } from "react";
-import { BookSearchContext } from "../Context/BookSearchContextDefinition";
+import { useEffect, useState } from 'react'
+import { BookSearchContext } from '../Context/BookSearchContextDefinition'
+import { ChevronDownIcon } from '@heroicons/react/16/solid'
 
-export default function BooksMain() {
-  // const Filters = ["A-Z", "Grátis", "Nº de Páginas", "Prévia"];
+export default function BooksMain ({ showFilter = true, children }) {
+  const [numActive, setNumActive] = useState(false)
+  const [stateNum, setStateNum] = useState(1)
 
-  const { books, error, isLoading } = useContext(BookSearchContext);
+  const Filters = ['A-Z', `Nº de Páginas`, 'Grátis', 'Prévia']
 
-  if (isLoading) {
-    return <p>Carregando livros...</p>;
+  useEffect(() => {
+    console.log(stateNum)
+  }, [stateNum])
+
+  const numControl = () => {
+    if (numActive) {
+      setNumActive(false)
+    } else {
+      setNumActive(true)
+    }
   }
 
-  if (error) {
-    return (
-      <div
-        style={{
-          color: "red",
-          border: "1px solid red",
-          padding: "10px",
-          borderRadius: "5px",
-        }}
-      >
-        <h2>Erro ao buscar livros:</h2>
-        <p>{error}</p>
-      </div>
-    );
+  const updateNum = e => {
+    switch (e) {
+      case 0:
+        setStateNum('1-10')
+        break;
+      case 1:
+        setStateNum('1-20')
+        break;
+      case 2:
+        setStateNum('1-30')
+        break;
+      case 3:
+        setStateNum('1-40')
+        break;
+      default:
+        break
+    }
   }
-  if (books === null) {
-    return;
-  }
-
-  if (books.length === 0) {
-    return <p>Nenhum livro encontrado. Tente uma nova busca!</p>;
-  }
-
-  // return (
-  //   <div className="flex bg-[#fff] border-2 border-[var(--cinza-claro)] shadow-lg m-6 p-3 rounded-xl">
-  //     {showFilter && (
-  //       <div className="flex justify-evenly w-full mx-20 cursor-pointer hover:bg-[]">
-  //         {Filters.map((Filters, index) => (
-  //           <div key={index} className="border rounded-full px-8 py-2">
-  //             <p className="text-medium">{Filters}</p>
-  //           </div>
-  //         ))}
-  //       </div>
-  //     )}
-
-  //     <div className="">{children}</div>
-  //   </div>
-  // );
 
   return (
-    <div className="books-list">
-      <ul style={{ listStyleType: "none", padding: 0 }}>
-        {books.map((book) => (
-          <li
-            key={book.id}
-            style={{
-              borderBottom: "1px solid #eee",
-              padding: "10px 0",
-              marginBottom: "10px",
-            }}
-          >
-            <h3 style={{ margin: "0 0 5px 0", color: "#333" }}>
-              {book.volumeInfo.title}
-            </h3>
-            <p style={{ margin: 0, color: "#666" }}>
-              Autor(es):{" "}
-              {book.volumeInfo.authors
-                ? book.volumeInfo.authors.join(", ")
-                : "Desconhecido"}
-            </p>
-            {book.volumeInfo.publishedDate && (
-              <p style={{ margin: "5px 0 0 0", fontSize: "0.9em", color: "#888" }}>
-                Publicado em: {book.volumeInfo.publishedDate}
-              </p>
-            )}
-            {book.volumeInfo.imageLinks?.thumbnail && (
-              <img
-                src={book.volumeInfo.imageLinks.thumbnail}
-                alt={`Capa de ${book.volumeInfo.title}`}
-                style={{ marginTop: "10px", maxWidth: "100px" }}
-              />
-            )}
-          </li>
-        ))}
-      </ul>
+    <div className='flex flex-col gap-5 bg-zinc-50 border-2 border-[var(--cinza-claro)] shadow-lg m-6 p-3 rounded-xl'>
+      {showFilter && (
+        <div className='flex justify-evenly mx-10'>
+          {Filters.map((filter, index) => (
+            <div
+              key={index}
+              className={`border rounded-full px-8 py-2 bg-white cursor-pointer ${
+                filter == 'Nº de Páginas' ? 'pr-4' : ''
+              }`}
+              onClick={numControl}
+            >
+              {filter === 'Nº de Páginas' ? (
+                <>
+                  <div className='flex'>
+                    <p className='text-medium'>Nº de Páginas</p>
+                    <ChevronDownIcon
+                      className={`w-6 transform transition-transform duration-300 ${
+                        !numActive ? 'rotate-0' : 'rotate-180'
+                      }`}
+                    />
+                  </div>
+
+                  {numActive && (
+                    <div className='absolute top-38 w-[121px] bg-white border-x text-center'>
+                      {Array.from({ length: 4 }, (_, i) => (
+                        <p
+                          key={i}
+                          className='border-b'
+                          onClick={() => updateNum(i)}
+                        >
+                          1 - {(i + 1) * 10}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p className='text-medium'>{filter}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      <p className='text-center'>{stateNum}</p>
+
+      <div className='flex flex-wrap justify-between px-10 gap-10'>
+        {children}
+      </div>
     </div>
-  );
+  )
 }

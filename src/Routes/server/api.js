@@ -1,6 +1,6 @@
 import React from "react";
 
-export async function APIBooks(queryFilter, query) {
+export async function APIBooks(queryFilter, query, maxResult = 10) {
   try {
     if (!query) {
       throw new Error("a pesquisa nao deve ser vazia");
@@ -8,7 +8,7 @@ export async function APIBooks(queryFilter, query) {
     const res = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${queryFilter}${encodeURIComponent(
         query
-      )}&maxResults=20`
+      )}&maxResults=${maxResult}`
     );
 
     if (!res.ok) {
