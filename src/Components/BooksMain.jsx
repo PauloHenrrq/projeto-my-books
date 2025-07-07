@@ -6,6 +6,10 @@ export default function BooksMain() {
 
   const { books, error, isLoading } = useContext(BookSearchContext);
 
+  if (books === null) {
+    return;
+  }
+
   if (isLoading) {
     return <p>Carregando livros...</p>;
   }
@@ -24,9 +28,6 @@ export default function BooksMain() {
         <p>{error}</p>
       </div>
     );
-  }
-  if (books === null) {
-    return;
   }
 
   if (books.length === 0) {
