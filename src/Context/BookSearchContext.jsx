@@ -16,9 +16,9 @@ export const BookSearchProvider = ({ children }) => {
       const data = await APIBooks(queryFilter, query);
       setBooks(data);
       console.log("Pesquisa bem-sucedida, dados no contexto:", data); // teste
-    } catch (err) {
-      setError(err.message); 
-      console.error("Erro capturado no contexto:", err.message); // teste
+    } catch (erro) {
+      setError(erro.message); 
+      console.error("Erro capturado no contexto:", erro.message); // teste
     } finally {
       setIsLoading(false);
     }

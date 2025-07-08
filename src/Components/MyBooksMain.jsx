@@ -36,7 +36,7 @@ const MyBooksMain = () => {
   if (books.length === 0) return <p>Nenhum livro encontrado nos favoritos.</p>;
 
   return (
-    <>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
       {books.map((book) => {
         const { id, volumeInfo } = book;
         const { title, imageLinks } = volumeInfo;
@@ -62,7 +62,7 @@ const MyBooksMain = () => {
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
 

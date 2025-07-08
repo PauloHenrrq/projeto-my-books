@@ -1,5 +1,6 @@
 // Componente filho para a geração de Card
 import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getFavoritesFromStorage,
   saveFavoritesToStorage,
@@ -10,6 +11,11 @@ import { StarIcon as StarIconOutline } from "@heroicons/react/24/outline";
 
 export default function BooksCard() {
   const { books, error, isLoading } = useContext(BookSearchContext);
+
+  const navigate = useNavigate();
+  const navigateToBooksInfo = (id) => {
+    navigate(`/book/${id}`);
+  };
 
   const [favorites, setFavorites] = useState({});
 
@@ -63,7 +69,7 @@ export default function BooksCard() {
           key={book.id}
           className="flex flex-col justify-between border-red-600 border w-64 p-2 text-center gap-2"
         >
-          <div className="">
+          <div className="cursor-pointer" onClick={() => navigateToBooksInfo(book.id)}>
             {book.volumeInfo.imageLinks?.thumbnail && (
               <div className="flex justify-center">
                 <img
