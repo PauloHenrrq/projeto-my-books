@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { BookSearchContext } from '../Context/BookSearchContextDefinition'
 
 export default function BooksCard ({ selectedRange }) {
-  let { books, error, isLoading } = useContext(BookSearchContext)
+  const { books, error, isLoading } = useContext(BookSearchContext)
 
   if (isLoading) {
     return <p>Carregando livros...</p>
