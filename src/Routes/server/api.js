@@ -1,6 +1,6 @@
 import React from "react";
 
-export async function APIBooks(queryFilter, query, maxResult = 10) {
+export async function APIBooks(queryFilter, query, maxResult = 20) {
   try {
     if (!query) {
       throw new Error("a pesquisa nao deve ser vazia");
