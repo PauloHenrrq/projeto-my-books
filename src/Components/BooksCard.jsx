@@ -1,12 +1,52 @@
 // Componente filho para a geração de Card
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import {
+  getFavoritesFromStorage,
+  saveFavoritesToStorage
+} from '../utils/localStorageFavorites'
 import { BookSearchContext } from '../Context/BookSearchContextDefinition'
+import { StarIcon } from '@heroicons/react/24/solid'
+import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
 
-export default function BooksCard ({ selectedRange }) {
+export default function BooksCard () {
   const { books, error, isLoading } = useContext(BookSearchContext)
+
+  const navigate = useNavigate()
+  const navigateToBooksInfo = id => {
+    navigate(`/book/${id}`)
+  }
+
+  const [favorites, setFavorites] = useState({})
+
+  useEffect(() => {
+    const saved = getFavoritesFromStorage()
+    setFavorites(saved)
+  }, [])
+
+  function isFavorite (id) {
+    const map = getFavoritesFromStorage()
+    return Boolean(map[id])
+  }
+  const toggleFavorite = bookId => {
+    const updated = { ...favorites }
+
+    if (updated[bookId]) {
+      delete updated[bookId]
+    } else {
+      updated[bookId] = true
+    }
+
+    setFavorites(updated)
+    saveFavoritesToStorage(updated)
+  }
 
   if (isLoading) {
     return <p>Carregando livros...</p>
+  }
+
+  if (books === null) {
+    return
   }
 
   if (error) {
@@ -16,9 +56,6 @@ export default function BooksCard ({ selectedRange }) {
         <p>{error}</p>
       </div>
     )
-  }
-  if (books === null) {
-    return
   }
 
   if (books.length === 0) {
@@ -31,6 +68,7 @@ export default function BooksCard ({ selectedRange }) {
         <div key={book.id} className='group perspective'>
           <div
             className='relative flex flex-col justify-between bg-zinc-600 w-64 h-full text-center p-2 rounded-l-xl transition-transform duration-500 border border-gray-400 z-10 transform-gpu group-hover:rotate-y-[12deg] cursor-pointer'
+            onClick={() => navigateToBooksInfo(book.id)}
             style={{ transformStyle: 'preserve-3d' }}
           >
             <div className='absolute top-[0.5%] h-[100%] border border-zinc-400 w-full bg-zinc-100 rounded-md z-0 shadow-inner group-hover:brightness-95 transition-all duration-300' />
@@ -71,6 +109,16 @@ export default function BooksCard ({ selectedRange }) {
                 Sem data de publicação
               </p>
             )}
+          </div>
+          <div>
+            <p>favoritar</p>
+            <span onClick={() => toggleFavorite(book.id)}>
+              {isFavorite(book.id) ? (
+                <StarIcon className='w-5 h-5 text-yellow-300 cursor-pointer ' />
+              ) : (
+                <StarIconOutline className='w-5 h-5 text-yellow-300 cursor-pointer ' />
+              )}
+            </span>
           </div>
         </div>
       ))}
