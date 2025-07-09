@@ -80,7 +80,15 @@ export default function BooksCard() {
           )}
           <div>
             <p>favoritar</p>
-            <FavoriteButton id={book.id} />
+            <FavoriteButton
+              id={book.id}
+              FavoriteIconON={
+                <StarIcon className="w-5 h-5 text-yellow-300 cursor-pointer" />
+              }
+              FavoriteIconOFF={
+                <StarIconOutline className="w-5 h-5 text-yellow-300 cursor-pointer" />
+              }
+            />
           </div>
         </div>
       ))}

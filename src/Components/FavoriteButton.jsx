@@ -6,7 +6,7 @@ import {
 import { StarIcon } from "@heroicons/react/24/solid";
 import { StarIcon as StarIconOutline } from "@heroicons/react/24/outline";
 
-const FavoriteButton = ({ id }) => {
+const FavoriteButton = ({ id, FavoriteIconON, FavoriteIconOFF }) => {
   const [isFav, setIsFav] = useState(() => {
     const storage = getFavoritesFromStorage();
     return Boolean(storage[id]);
@@ -26,15 +26,7 @@ const FavoriteButton = ({ id }) => {
     saveFavoritesToStorage(storage);
   }
 
-  return (
-    <span onClick={toggleFavorite}>
-      {isFav ? (
-        <StarIcon className="w-5 h-5 text-yellow-300 cursor-pointer" />
-      ) : (
-        <StarIconOutline className="w-5 h-5 text-yellow-300 cursor-pointer" />
-      )}
-    </span>
-  );
+  return <span onClick={toggleFavorite}>{isFav ? FavoriteIconON : FavoriteIconOFF}</span>;
 };
 
 export default FavoriteButton;
