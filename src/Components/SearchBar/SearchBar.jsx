@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import SerachInput from './SearchInput'
 import FilterDropdown from './FilterDropdown'
-import { BookSearchContext } from '../../Context/BookSearchContextDefinition'
+import { BookSearchContext } from '../../Context/BookSearchContext/BookSearchContextDefinition'
 
 const SearchBar = () => {
   const [query, setQuery] = useState('')
@@ -45,7 +45,7 @@ const SearchBar = () => {
   }
 
   return (
-    <div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-[var(--cinza-claro)] px-4 sm:px-6 py-3 border border-gray-300 rounded-lg w-full max-w-2xl'>
+    <div className='flex m-auto mt-5 sm:flex-row items-center gap-2 sm:gap-4 bg-[var(--cinza-claro)] px-4 sm:px-6 py-3 border border-gray-300 rounded-2xl w-full max-w-2xl'>
       <FilterDropdown value={queryFilterOption} onClick={handleQueryOption} />
       <SerachInput
         value={query}

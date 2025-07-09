@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { BookSearchContext } from './BookSearchContextDefinition'
-import { APIBooks } from '../Routes/server/api'
+import { APIBooks } from '../../Routes/server/api'
 
 export const BookSearchProvider = ({ children }) => {
   const [books, setBooks] = useState(null)
@@ -9,9 +9,11 @@ export const BookSearchProvider = ({ children }) => {
 
   useEffect(() => {
     const initialBooks = async () => {
+      setIsLoading(true)
       try {
         const data = await APIBooks('', 'Harry%20Potter')
         setBooks(data)
+        setIsLoading(false)
       } catch (error) {
         console.log(`Houve um erro ao retornar livros inicialmente: ${error}`)
       }
@@ -45,7 +47,7 @@ export const BookSearchProvider = ({ children }) => {
   }
 
   return (
-    <BookSearchContext.Provider value={contextValue}>
+    <BookSearchContext.Provider value={contextValue} className=''>
       {children}
     </BookSearchContext.Provider>
   )

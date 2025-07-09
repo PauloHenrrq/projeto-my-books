@@ -5,7 +5,7 @@ import {
   getFavoritesFromStorage,
   saveFavoritesToStorage
 } from '../utils/localStorageFavorites'
-import { BookSearchContext } from '../Context/BookSearchContextDefinition'
+import { BookSearchContext } from '../Context/BookSearchContext/BookSearchContextDefinition'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
 
@@ -42,7 +42,20 @@ export default function BooksCard () {
   }
 
   if (isLoading) {
-    return <p>Carregando livros...</p>
+    return (
+      <h1 className='title-h1 text-gray-800 font-semibold flex justify-center items-end mb-5'>
+        Procurando&nbsp;
+        {Array.from({ length: 3 }).map((_, index) => (
+          <span
+            key={index}
+            className='upDown'
+            style={{ animationDelay: `${index * 0.15}s` }}
+          >
+            .
+          </span>
+        ))}
+      </h1>
+    )
   }
 
   if (books === null) {
@@ -59,7 +72,9 @@ export default function BooksCard () {
   }
 
   if (books.length === 0) {
-    return <p>Nenhum livro encontrado. Tente uma nova busca!</p>
+    return (
+      <h1 className='title-h1'>Nenhum livro encontrado. Tente uma nova busca!</h1>
+    )
   }
 
   return (
@@ -67,13 +82,22 @@ export default function BooksCard () {
       {books.map(book => (
         <div key={book.id} className='group perspective'>
           <div
-            className='relative flex flex-col justify-between bg-zinc-600 w-64 h-full text-center p-2 rounded-l-xl transition-transform duration-500 border border-gray-400 z-10 transform-gpu group-hover:rotate-y-[12deg] cursor-pointer'
+            className='relative flex flex-col justify-between bg-zinc-600 w-64 h-[394px] text-center p-2 rounded-l-xl transition-transform duration-500 border border-gray-400 z-10 transform-gpu group-hover:rotate-y-[12deg] cursor-pointer'
             onClick={() => navigateToBooksInfo(book.id)}
             style={{ transformStyle: 'preserve-3d' }}
           >
+            <div>
+              <span onClick={() => toggleFavorite(book.id)}>
+                {isFavorite(book.id) ? (
+                  <StarIcon className='absolute right-0 w-5 h-5 text-yellow-300 cursor-pointer ' />
+                ) : (
+                  <StarIconOutline className='absolute right-0 w-5 h-5 text-yellow-300 cursor-pointer z-50' />
+                )}
+              </span>
+            </div>
             <div className='absolute top-[0.5%] h-[100%] border border-zinc-400 w-full bg-zinc-100 rounded-md z-0 shadow-inner group-hover:brightness-95 transition-all duration-300' />
 
-            <div className='flex flex-col gap-1 relative z-10'>
+            <div className='flex flex-col h-[92%] gap-1 z-10'>
               {book.volumeInfo.imageLinks?.thumbnail ? (
                 <div className='flex justify-center'>
                   <img
@@ -109,16 +133,6 @@ export default function BooksCard () {
                 Sem data de publicação
               </p>
             )}
-          </div>
-          <div>
-            <p>favoritar</p>
-            <span onClick={() => toggleFavorite(book.id)}>
-              {isFavorite(book.id) ? (
-                <StarIcon className='w-5 h-5 text-yellow-300 cursor-pointer ' />
-              ) : (
-                <StarIconOutline className='w-5 h-5 text-yellow-300 cursor-pointer ' />
-              )}
-            </span>
           </div>
         </div>
       ))}

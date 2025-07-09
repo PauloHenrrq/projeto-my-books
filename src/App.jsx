@@ -1,13 +1,14 @@
-import { React } from "react";
-import "./App.css";
-import BooksMain from "./Components/BooksMain";
-import BooksCard from "./Components/BooksCard.jsx";
-import Books from "./Pages/Books.jsx";
+import { React } from 'react'
+import './App.css'
+import { BrowserRouter } from 'react-router-dom'
+import AppRouter from './Routes/AppRouter.jsx'
 
-function App() {
+function App () {
   return (
-    <Books />
+    <BrowserRouter>
+      <AppRouter />
+    </BrowserRouter>
   )
 }
 
-export default App;
+export default App

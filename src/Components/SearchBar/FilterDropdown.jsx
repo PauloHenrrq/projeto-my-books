@@ -34,7 +34,7 @@ function FilterDropdown({ value, onClick }) {
       </button>
 
       {isOpen && (
-        <ul className="absolute left-0 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+        <ul className="absolute left-0 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-20">
           {queryFilterOptions.map((option) => (
             <li
               key={option}
