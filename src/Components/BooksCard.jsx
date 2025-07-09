@@ -1,10 +1,7 @@
 // Componente filho para a geração de Card
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  getFavoritesFromStorage,
-  saveFavoritesToStorage,
-} from "../utils/localStorageFavorites";
+import FavoriteButton from "./FavoriteButton";
 import { BookSearchContext } from "../Context/BookSearchContextDefinition";
 import { StarIcon } from "@heroicons/react/24/solid";
 import { StarIcon as StarIconOutline } from "@heroicons/react/24/outline";
@@ -15,30 +12,6 @@ export default function BooksCard() {
   const navigate = useNavigate();
   const navigateToBooksInfo = (id) => {
     navigate(`/book/${id}`);
-  };
-
-  const [favorites, setFavorites] = useState({});
-
-  useEffect(() => {
-    const saved = getFavoritesFromStorage();
-    setFavorites(saved);
-  }, []);
-
-  function isFavorite(id) {
-    const map = getFavoritesFromStorage();
-    return Boolean(map[id]);
-  }
-  const toggleFavorite = (bookId) => {
-    const updated = { ...favorites };
-
-    if (updated[bookId]) {
-      delete updated[bookId];
-    } else {
-      updated[bookId] = true;
-    }
-
-    setFavorites(updated);
-    saveFavoritesToStorage(updated);
   };
 
   if (isLoading) {
@@ -107,13 +80,7 @@ export default function BooksCard() {
           )}
           <div>
             <p>favoritar</p>
-            <span onClick={() => toggleFavorite(book.id)}>
-              {isFavorite(book.id) ? (
-                <StarIcon className="w-5 h-5 text-yellow-300 cursor-pointer " />
-              ) : (
-                <StarIconOutline className="w-5 h-5 text-yellow-300 cursor-pointer " />
-              )}
-            </span>
+            <FavoriteButton id={book.id} />
           </div>
         </div>
       ))}
