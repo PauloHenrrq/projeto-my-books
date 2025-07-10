@@ -30,7 +30,7 @@ function FilterDropdown ({ value, onClick }) {
         {value}
         <span className='ml-2 w-5 h-5'>
           <ChevronDownIcon
-            className={`w-6 transform transition-transform duration-300 ${
+            className={`relative bottom-0.5 w-6 transform transition-transform duration-300 ${
               isOpen ? 'rotate-0' : 'rotate-x-180'
             }`}
           />

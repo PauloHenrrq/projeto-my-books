@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { BookSearchContext } from '../Context/BookSearchContext/BookSearchContextDefinition'
+import { BookFilterContext } from '../Context/BookFilterContext/BookFilterContextDefinition'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 
 export default function BooksMain ({ showFilter = true, children }) {
   const [stateNum, setStateNum] = useState('1-20')
   const [numberPage, setNumberPage] = useState(false)
   const [buttonActive, setButtonActive] = useState({})
-  const [sortOrder, setSortOrder] = useState(null)
+  const [sorterOrder, setSorterOrder] = useState(null)
+  const { updateSearchParams } = useContext(BookSearchContext)
+  const { setSortOrder, setHasPreview } = useContext(BookFilterContext)
+
   const dropdownRef = useRef()
 
   const Filters = ['A-Z', `Nº de Páginas`, 'Grátis', 'Prévia']
@@ -19,6 +23,10 @@ export default function BooksMain ({ showFilter = true, children }) {
     const handler = event => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setNumberPage(false)
+        setButtonActive(prev => ({
+          ...prev,
+          1: false
+        }))
       }
     }
 
@@ -26,15 +34,38 @@ export default function BooksMain ({ showFilter = true, children }) {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
+  useEffect(() => {
+    setSortOrder(sorterOrder)
+  }, [sorterOrder])
+
+  useEffect(() => {
+    const numCorrect = parseInt(stateNum.split('-')[1])
+    updateSearchParams({ maxResult: numCorrect })
+  }, [stateNum])
+
+  useEffect(() => {
+    updateSearchParams({ isFree: !!buttonActive[2] })
+  }, [buttonActive[2]])
+
+  useEffect(() => {
+    if (buttonActive[3]) {
+      setHasPreview(true)
+      return
+    }
+    if (!buttonActive[3]) {
+      setHasPreview(false)
+    }
+  }, [buttonActive[3]])
+
   function buttonClick (index) {
     if (index === 0) {
-      setSortOrder(prev => {
+      setSorterOrder(prev => {
         if (prev === null) return 'A-Z'
         if (prev === 'A-Z') return 'Z-A'
         if (prev === 'Z-A') return null
       })
 
-      if (sortOrder === 'Z-A') {
+      if (sorterOrder === 'Z-A') {
         setButtonActive(prev => ({
           ...prev,
           [index]: false
@@ -65,6 +96,7 @@ export default function BooksMain ({ showFilter = true, children }) {
 
   const updateNum = e => {
     setNumberPage(false)
+
     switch (e) {
       case 0:
         setStateNum('1-10')
@@ -81,6 +113,11 @@ export default function BooksMain ({ showFilter = true, children }) {
       default:
         break
     }
+
+    setButtonActive(prev => ({
+      ...prev,
+      1: false
+    }))
   }
 
   return (
@@ -121,7 +158,9 @@ export default function BooksMain ({ showFilter = true, children }) {
                         className={`hover:bg-zinc-300 transition-all duration-200 cursor-pointer ${
                           i === 3 ? 'rounded-b-lg' : 'border-b border-gray-500'
                         }`}
-                        onMouseDown={() => updateNum(i)} // <- troca de onClick para evitar fechamento antecipado
+                        onMouseDown={() => {
+                          updateNum(i)
+                        }}
                       >
                         1 - {(i + 1) * 10}
                       </p>
@@ -143,9 +182,9 @@ export default function BooksMain ({ showFilter = true, children }) {
               >
                 <p className='text-medium'>
                   {index === 0
-                    ? sortOrder === null
+                    ? sorterOrder === null
                       ? 'A-Z'
-                      : sortOrder
+                      : sorterOrder
                     : filter}
                 </p>
               </button>

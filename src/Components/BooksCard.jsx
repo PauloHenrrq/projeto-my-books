@@ -6,19 +6,19 @@ import {
   saveFavoritesToStorage
 } from '../utils/localStorageFavorites'
 import { BookSearchContext } from '../Context/BookSearchContext/BookSearchContextDefinition'
+import { BookFilterContext } from '../Context/BookFilterContext/BookFilterContextDefinition'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
 
 export default function BooksCard () {
+  const [favorites, setFavorites] = useState({})
   const { books, error, isLoading } = useContext(BookSearchContext)
-  
+  const { sortOrder, hasPreview } = useContext(BookFilterContext)
 
   const navigate = useNavigate()
   const navigateToBooksInfo = id => {
     navigate(`/book/${id}`)
   }
-
-  const [favorites, setFavorites] = useState({})
 
   useEffect(() => {
     const saved = getFavoritesFromStorage()
@@ -29,6 +29,24 @@ export default function BooksCard () {
     const map = getFavoritesFromStorage()
     return Boolean(map[id])
   }
+
+  const sortedBooks = Array.isArray(books)
+    ? [...books].sort((a, b) => {
+        const titleA = a.volumeInfo.title || ''
+        const titleB = b.volumeInfo.title || ''
+
+        if (sortOrder === 'A-Z') return titleA.localeCompare(titleB)
+        if (sortOrder === 'Z-A') return titleB.localeCompare(titleA)
+        return 0
+      })
+    : []
+
+  const filteredBooks = hasPreview
+    ? sortedBooks.filter(book =>
+        ['PARTIAL', 'ALL_PAGES'].includes(book.accessInfo?.viewability)
+      )
+    : sortedBooks
+
   const toggleFavorite = bookId => {
     const updated = { ...favorites }
 
@@ -44,7 +62,7 @@ export default function BooksCard () {
 
   if (isLoading) {
     return (
-      <h1 className='title-h1 text-gray-800 font-semibold flex justify-center items-end mb-5'>
+      <h1 className='title-h1 text-gray-800 font-semibold flex justify-center items-end mb-100'>
         Procurando&nbsp;
         {Array.from({ length: 3 }).map((_, index) => (
           <span
@@ -74,13 +92,15 @@ export default function BooksCard () {
 
   if (books.length === 0) {
     return (
-      <h1 className='title-h1'>Nenhum livro encontrado. Tente uma nova busca!</h1>
+      <h1 className='title-h1'>
+        Nenhum livro encontrado. Tente uma nova busca!
+      </h1>
     )
   }
 
   return (
     <>
-      {books.map(book => (
+      {filteredBooks.map(book => (
         <div key={book.id} className='group perspective'>
           <div
             className='relative flex flex-col justify-between bg-zinc-600 w-64 h-[394px] text-center p-2 rounded-l-xl transition-transform duration-500 border border-gray-400 z-10 transform-gpu group-hover:rotate-y-[12deg] cursor-pointer'

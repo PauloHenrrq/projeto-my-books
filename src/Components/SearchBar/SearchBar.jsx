@@ -6,12 +6,12 @@ import { BookSearchContext } from '../../Context/BookSearchContext/BookSearchCon
 const SearchBar = () => {
   const [query, setQuery] = useState('')
   const [queryFilterOption, setFilterQueryOption] = useState('Todos')
-  const { performSearch } = useContext(BookSearchContext)
+  const { updateSearchParams } = useContext(BookSearchContext)
 
   const handleQueryOption = optionText => {
     setFilterQueryOption(optionText)
 
-    console.log(optionText) //teste
+    console.log(optionText) 
   }
 
   const handleQueryInput = e => {
@@ -40,7 +40,7 @@ const SearchBar = () => {
       console.log(
         'pesquisando  ' + queryApi + ' filterOption:' + queryFilterApi
       ) // teste
-      performSearch(queryFilterApi, queryApi)
+      updateSearchParams({ queryFilter: queryFilterApi, query: queryApi })
     }
   }
 
