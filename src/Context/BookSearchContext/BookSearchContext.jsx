@@ -47,7 +47,7 @@ export const BookSearchProvider = ({ children }) => {
   }
 
   return (
-    <BookSearchContext.Provider value={contextValue} className=''>
+    <BookSearchContext.Provider value={contextValue}>
       {children}
     </BookSearchContext.Provider>
   )

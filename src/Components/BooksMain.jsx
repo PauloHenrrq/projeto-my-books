@@ -3,7 +3,7 @@ import { BookSearchContext } from '../Context/BookSearchContext/BookSearchContex
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 
 export default function BooksMain ({ showFilter = true, children }) {
-  const [stateNum, setStateNum] = useState('1-10')
+  const [stateNum, setStateNum] = useState('1-20')
   const [numberPage, setNumberPage] = useState(false)
   const [buttonActive, setButtonActive] = useState({})
   const [sortOrder, setSortOrder] = useState(null)

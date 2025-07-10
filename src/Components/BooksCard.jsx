@@ -11,6 +11,7 @@ import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
 
 export default function BooksCard () {
   const { books, error, isLoading } = useContext(BookSearchContext)
+  
 
   const navigate = useNavigate()
   const navigateToBooksInfo = id => {
