@@ -1,50 +1,79 @@
 import { useState } from "react";
 
 export default function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
+  const user = {
+    name: "Dennis Araújo",
+    email: "dennis@gmail.com",
+  };
+
+  const handleScrollToFooter = () => {
+    const footer = document.getElementById("footer");
+    footer?.scrollIntoView({ behavior: "smooth" });
+    setShowMenu(false);
+  };
+
   return (
-    <header className="flex items-center justify-between px-8 py-4 bg-[#F9FAFB] shadow-md">
-      
-      <div className="text-2xl font-bold text-[#1F2937] flex items-center gap-2">
-        📚 MyBooks
-      </div>
+    <>
+      <header className="flex items-center justify-between px-8 py-4 bg-[#F9FAFB] shadow-md">
+        <div className="text-2xl font-bold text-[#1F2937]">📚 MyBooks</div>
 
-      
-      <nav className="flex items-center space-x-6">
-        
-        <a href="#" className="text-[#3B82F6] hover:text-[#93C5FD] font-medium">
-          Meus Livros
-        </a>
+        {isLoggedIn ? (
+          <div className="relative">
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              className="flex items-center gap-2 bg-[#3B82F6] text-white px-4 py-2 rounded-full cursor-pointer"
+            >
+              {user.name}
+              <span className="text-xl">🔵</span>
+            </button>
 
-       
-        <div
-          onClick={() => setShowMenu(!showMenu)}
-          className="w-10 h-10 bg-[#3B82F6] rounded-full flex items-center justify-center text-white font-bold cursor-pointer"
-        >
-          P
-        </div>
-      </nav>
+            {showMenu && (
+              <div className="absolute right-0 mt-2 w-64 bg-white border shadow-lg rounded-lg p-4 space-y-2 z-50">
+                <div>
+                  <p className="font-semibold text-[#1F2937]">{user.name}</p>
+                  <p className="text-sm text-gray-500">{user.email}</p>
+                </div>
 
-      {showMenu && (
-        <div className="fixed top-0 right-0 h-full w-56 bg-white shadow-lg z-50 flex flex-col p-4 space-y-4 border-l">
-          <button
-            onClick={() => setShowMenu(false)}
-            className="self-end text-[#3B82F6] font-bold"
-          >
-            ✕
-          </button>
-          <a href="#" className="text-[#1F2937] hover:text-[#3B82F6] font-medium">
-            Perfil
-          </a>
-          <a href="#" className="text-[#1F2937] hover:text-[#3B82F6] font-medium">
-            Contato
-          </a>
-          <a href="#" className="text-[#1F2937] hover:text-[#3B82F6] font-medium">
-            Sair
-          </a>
-        </div>
-      )}
-    </header>
+                <button className="w-full text-left text-[#3B82F6] hover:underline cursor-pointer">
+                  Configurações da Conta
+                </button>
+
+                <button
+                  onClick={handleScrollToFooter}
+                  className="w-full text-left text-[#3B82F6] hover:underline cursor-pointer"
+                >
+                  Contato
+                </button>
+
+                <button
+                  onClick={() => {
+                    setIsLoggedIn(false);
+                    setShowMenu(false);
+                  }}
+                  className="w-full text-left text-[#3B82F6] hover:underline cursor-pointer"
+                >
+                  Sair
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-x-4">
+            <button
+              onClick={() => setIsLoggedIn(true)}
+              className="bg-[#3B82F6] text-white px-4 py-2 rounded cursor-pointer"
+            >
+              Login
+            </button>
+            <button className="bg-[#93C5FD] text-white px-4 py-2 rounded cursor-pointer">
+              Cadastre-se
+            </button>
+          </div>
+        )}
+      </header>
+    </>
   );
 }
