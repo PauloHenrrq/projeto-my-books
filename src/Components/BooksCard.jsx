@@ -124,7 +124,7 @@ export default function BooksCard () {
                   <StarIcon className='absolute -left-2 -top-3 w-7 h-7 text-yellow-400 cursor-pointer z-20' />
                 }
                 FavoriteIconOFF={
-                  <StarIcon className='absolute -left-2 -top-3 w-7 h-7 text-yellow-800 cursor-pointer z-20' />
+                  <StarIconOutline className='absolute -left-2 -top-3 w-7 h-7 text-yellow-600 fill-zinc-200 stroke-2 cursor-pointer z-20' />
                 }
               />
             </div>
