@@ -26,7 +26,7 @@ export async function APIBooks (
     const data = await res.json()
 
     console.log('pesquisa deu certo') // teste
-    return data.items || []
+    return data
   } catch (error) {
     console.error('Ocorreu um erro ao buscar os livros:', error.message) // teste
     throw new Error(error.message)

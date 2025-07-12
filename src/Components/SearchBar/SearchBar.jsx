@@ -40,7 +40,7 @@ const SearchBar = () => {
       console.log(
         'pesquisando  ' + queryApi + ' filterOption:' + queryFilterApi
       ) // teste
-      updateSearchParams({ queryFilter: queryFilterApi, query: queryApi })
+      updateSearchParams({ queryFilter: queryFilterApi, query: queryApi, index: 0 })
     }
   }
 

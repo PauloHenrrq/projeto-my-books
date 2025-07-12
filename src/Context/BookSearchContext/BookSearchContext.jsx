@@ -10,8 +10,11 @@ export const BookSearchProvider = ({ children }) => {
     maxResult: 20,
     index: 0
   })
+  const [totalItems, setTotalItems] = useState(null)
   const [books, setBooks] = useState(null)
   const [error, setError] = useState(null)
+  const [controlButton1, setControlButton1] = useState(true)
+  const [controlButton2, setControlButton2] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const isFirstRender = useRef(true)
 
@@ -35,23 +38,87 @@ export const BookSearchProvider = ({ children }) => {
   ) => {
     const startIndex = index * maxResult
 
+    // 🔹 MODO GRATUITO (Google retorna totalItems absurdamente alto)
+    if (isFree) {
+      console.log('🔥 Modo isFree detectado')
+
+      setIsLoading(true)
+      setError(null)
+      setBooks(null)
+
+      try {
+        const [data, nextPage1, nextPage2] = await Promise.all([
+          APIBooks(queryFilter, query, true, maxResult, startIndex),
+          APIBooks(queryFilter, query, true, maxResult, startIndex + maxResult),
+          APIBooks(
+            queryFilter,
+            query,
+            true,
+            maxResult,
+            startIndex + maxResult * 2
+          )
+        ])
+
+        const booksCurrent = data?.items || []
+        const hasMorePage1 = nextPage1?.items?.length > 0
+        const hasMorePage2 = nextPage2?.items?.length > 0
+
+        setBooks(booksCurrent)
+        setTotalItems(999999) // impede travamento da navegação
+        setControlButton1(hasMorePage1)
+        setControlButton2(hasMorePage2)
+
+        console.log('🔥 Livros encontrados (grátis):', booksCurrent)
+      } catch (err) {
+        setError(err.message)
+        console.error('Erro no modo isFree:', err.message)
+      } finally {
+        setIsLoading(false)
+      }
+
+      return // impede execução do restante
+    }
+
+    // 🔹 MODO NORMAL
+    console.log('index: ', index)
+
     setIsLoading(true)
     setError(null)
     setBooks(null)
 
     try {
-      const data = await APIBooks(
-        queryFilter,
-        query,
-        isFree,
-        maxResult,
-        startIndex
-      )
-      setBooks(data)
-      console.log('Pesquisa bem-sucedida, dados no contexto:', data) // teste
+      const [data, nextPage1, nextPage2] = await Promise.all([
+        APIBooks(queryFilter, query, false, maxResult, startIndex),
+        APIBooks(queryFilter, query, false, maxResult, startIndex),
+        APIBooks(queryFilter, query, false, maxResult, (index + 1) * maxResult)
+      ])
+
+      const remainingNext1 = nextPage1?.items?.length || 0
+      const remainingNext2 = nextPage2?.items?.length || 0
+
+      const totalItemsFromNextPage = nextPage1?.totalItems || 0
+      let adjustedData = data
+
+      if (totalItemsFromNextPage > 0 && totalItemsFromNextPage < 41) {
+        console.log('🔥 Refazendo busca com dados finais faltantes')
+        adjustedData = await APIBooks(
+          queryFilter,
+          query,
+          false,
+          totalItemsFromNextPage,
+          startIndex
+        )
+      }
+
+      setBooks(adjustedData.items)
+      setTotalItems(totalItemsFromNextPage)
+      setControlButton1(remainingNext1 > 0)
+      setControlButton2(remainingNext2 > 0)
+
+      console.log('✅ Livros encontrados:', adjustedData.items)
     } catch (err) {
       setError(err.message)
-      console.error('Erro capturado no contexto:', err.message) // teste
+      console.error('Erro no modo normal:', err.message)
     } finally {
       setIsLoading(false)
     }
@@ -73,7 +140,12 @@ export const BookSearchProvider = ({ children }) => {
     books,
     error,
     isLoading,
-    updateSearchParams
+    totalItems,
+    controlButton1,
+    controlButton2,
+    searchParams,
+    updateSearchParams: newParams =>
+      setSearchParams(prev => ({ ...prev, ...newParams }))
   }
 
   return (

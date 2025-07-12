@@ -12,8 +12,10 @@ import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
 
 export default function BooksCard () {
   const [favorites, setFavorites] = useState({})
-  const { books, error, isLoading } = useContext(BookSearchContext)
   const { sortOrder, hasPreview } = useContext(BookFilterContext)
+  const { books, error, isLoading, totalItems, updateSearchParams } =
+    useContext(BookSearchContext)
+  const { index } = updateSearchParams
 
   const navigate = useNavigate()
   const navigateToBooksInfo = id => {
@@ -60,6 +62,15 @@ export default function BooksCard () {
     saveFavoritesToStorage(updated)
   }
 
+  if (error) {
+    return (
+      <div className='text-red-600 border-red-600 p-2.5 rounded-[5px]'>
+        <h2>Erro ao buscar livros:</h2>
+        <p>{error}</p>
+      </div>
+    )
+  }
+
   if (isLoading) {
     return (
       <h1 className='title-h1 text-gray-800 font-semibold flex justify-center items-end mb-100'>
@@ -77,22 +88,20 @@ export default function BooksCard () {
     )
   }
 
-  if (books === null) {
-    return
-  }
-
-  if (error) {
+  if (Array.isArray(books) && books.length === 0) {
     return (
-      <div className='text-red-600 border-red-600 p-2.5 rounded-[5px]'>
-        <h2>Erro ao buscar livros:</h2>
-        <p>{error}</p>
-      </div>
+      <h1 className='title-h1 mb-92'>
+        Não existe nenhum livro grátis dessa pesquisa!
+      </h1>
     )
   }
 
-  if (books.length === 0) {
+  if (totalItems === 0 || !books) {
+    if (!books) {
+      updateSearchParams({ index: 0 })
+    }
     return (
-      <h1 className='title-h1'>
+      <h1 className='title-h1 mb-92'>
         Nenhum livro encontrado. Tente uma nova busca!
       </h1>
     )

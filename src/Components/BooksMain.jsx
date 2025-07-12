@@ -1,23 +1,38 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { use, useContext, useEffect, useRef, useState } from 'react'
 import { BookSearchContext } from '../Context/BookSearchContext/BookSearchContextDefinition'
 import { BookFilterContext } from '../Context/BookFilterContext/BookFilterContextDefinition'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
+import {
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
+} from '@heroicons/react/24/solid'
 
 export default function BooksMain ({ showFilter = true, children }) {
   const [stateNum, setStateNum] = useState('1-20')
   const [numberPage, setNumberPage] = useState(false)
   const [buttonActive, setButtonActive] = useState({})
   const [sorterOrder, setSorterOrder] = useState(null)
-  const { updateSearchParams } = useContext(BookSearchContext)
+  const { controlButton1, controlButton2, totalItems, searchParams, updateSearchParams } =
+    useContext(BookSearchContext)
+  const { maxResult, index } = searchParams
   const { setSortOrder, setHasPreview } = useContext(BookFilterContext)
 
   const dropdownRef = useRef()
 
   const Filters = ['A-Z', `Nº de Páginas`, 'Grátis', 'Prévia']
 
+  const hasNextPage = index + maxResult < totalItems
+  const hasPrevPage = index > 0
+
   useEffect(() => {
-    console.log(buttonActive)
-  }, [buttonActive])
+    console.log(totalItems)
+  }, [totalItems])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [index])
 
   useEffect(() => {
     const handler = event => {
@@ -84,6 +99,33 @@ export default function BooksMain ({ showFilter = true, children }) {
       ...prev,
       [index]: !prev[index]
     }))
+  }
+
+  const controlPrevPage = controlIndex => {
+    if (index === 0) {
+      return
+    }
+
+    const checkPage = index + controlIndex
+
+    if (checkPage < 0) {
+      return updateSearchParams({ index: index - 1 })
+    } else {
+      return updateSearchParams({ index: index + controlIndex })
+    }
+  }
+
+  const controlNextPage = controlIndex => {
+    const numberPages = (index + controlIndex) * maxResult
+    const checkFinalPage = totalItems - numberPages
+
+    if (checkFinalPage > 0) {
+      return updateSearchParams({ index: index + controlIndex })
+    } else {
+      const pageAdjust = controlIndex * maxResult + checkFinalPage
+      const correctlyPage = totalItems - pageAdjust
+      return updateSearchParams({ index: correctlyPage })
+    }
   }
 
   const ControlNumberPage = () => {
@@ -198,8 +240,58 @@ export default function BooksMain ({ showFilter = true, children }) {
         {children}
       </div>
 
-      <div>
-        <p>a</p>
+      <div className='flex justify-between px-5 my-5'>
+        <div className='flex gap-4'>
+          <button
+            className='w-fit h-fit cursor-pointer hover:scale-110 transition-all duration-200'
+            disabled={!hasPrevPage}
+            onClick={() => {
+              controlPrevPage(-2)
+            }}
+          >
+            <ChevronDoubleLeftIcon
+              className={`w-8 ${!hasPrevPage ? 'fill-zinc-300' : 'fill-black'}`}
+            />
+          </button>
+          <button
+            className='w-fit h-fit cursor-pointer hover:scale-110 transition-all duration-200'
+            disabled={!hasPrevPage}
+            onClick={() => {
+              controlPrevPage(-1)
+            }}
+          >
+            <ChevronLeftIcon
+              className={`w-8 ${!hasPrevPage ? 'fill-zinc-300' : 'fill-black'}`}
+            />
+          </button>
+        </div>
+        <div>
+          <p>{index + 1}</p>
+        </div>
+        <div className='flex gap-4'>
+          <button
+            className='w-fit h-fit cursor-pointer hover:scale-110 transition-all duration-200'
+            disabled={!hasNextPage || !controlButton1}
+            onClick={() => {
+              controlNextPage(1)
+            }}
+          >
+            <ChevronRightIcon
+              className={`w-8 ${!hasNextPage ? 'fill-zinc-300' : 'fill-black'}`}
+            />
+          </button>
+          <button
+            className='w-fit h-fit cursor-pointer hover:scale-110 transition-all duration-200'
+            disabled={!controlButton2}
+            onClick={() => {
+              controlNextPage(2)
+            }}
+          > 
+            <ChevronDoubleRightIcon
+              className={`w-8 ${!controlButton2 ? 'fill-zinc-300' : 'fill-black'}`}
+            />
+          </button>
+        </div>
       </div>
     </div>
   )

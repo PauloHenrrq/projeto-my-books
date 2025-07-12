@@ -52,6 +52,7 @@ body {
 
 .animate-dropdown {
   animation: dropdown 0.3s ease-out forwards;
+  animation-
 }
 
 @keyframes upDown {
