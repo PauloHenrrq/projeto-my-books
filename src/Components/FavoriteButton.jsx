@@ -29,7 +29,7 @@ const FavoriteButton = ({ id, FavoriteIconON, FavoriteIconOFF }) => {
   }
 
   return (
-    <span onClick={toggleFavorite}>
+    <span className='' onClick={toggleFavorite}>
       {isFav ? FavoriteIconON : FavoriteIconOFF}
     </span>
   )
