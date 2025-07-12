@@ -103,7 +103,7 @@ export default function BooksCard () {
     }
     return (
       <h1 className='title-h1 mb-92'>
-        Nenhum livro encontrado. Tente uma nova busca!
+        Nenhum livro encontrado 😕. Tente uma nova busca! 📚
       </h1>
     )
   }
@@ -113,19 +113,15 @@ export default function BooksCard () {
       {filteredBooks.map(book => (
         <div key={book.id} className='group perspective'>
           <div
-            className='relative flex flex-col justify-between bg-zinc-600 w-64 h-[394px] text-center p-2 rounded-l-xl transition-transform duration-500 border border-gray-400 z-10 transform-gpu group-hover:rotate-y-[12deg] cursor-pointer'
+            className='relative flex flex-col justify-between bg-zinc-600 w-64 h-[394px] text-center p-2 rounded-l-xl transition-transform duration-500 border border-gray-400 z-10 cursor-pointer hover:scale-[101%]'
             onClick={() => navigateToBooksInfo(book.id)}
             style={{ transformStyle: 'preserve-3d' }}
           >
             <div>
               <FavoriteButton
                 id={book.id}
-                FavoriteIconON={
-                  <StarIcon className='absolute -left-2 -top-3 w-7 h-7 text-yellow-400 cursor-pointer z-20' />
-                }
-                FavoriteIconOFF={
-                  <StarIconOutline className='absolute -left-2 -top-3 w-7 h-7 text-yellow-600 fill-zinc-200 stroke-2 cursor-pointer z-20' />
-                }
+                FavoriteIconON={<StarIcon />}
+                FavoriteIconOFF={<StarIconOutline />}
               />
             </div>
             <div className='absolute top-[0.5%] h-[100%] border border-zinc-400 w-full bg-zinc-100 rounded-md z-0 shadow-inner group-hover:brightness-95 transition-all duration-300' />

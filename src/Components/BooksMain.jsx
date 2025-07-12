@@ -14,14 +14,26 @@ export default function BooksMain ({ showFilter = true, children }) {
   const [numberPage, setNumberPage] = useState(false)
   const [buttonActive, setButtonActive] = useState({})
   const [sorterOrder, setSorterOrder] = useState(null)
-  const { controlButton1, controlButton2, totalItems, searchParams, updateSearchParams } =
-    useContext(BookSearchContext)
+  const {
+    controlButton1,
+    controlButton2,
+    totalItems,
+    searchParams,
+    updateSearchParams
+  } = useContext(BookSearchContext)
   const { maxResult, index } = searchParams
   const { setSortOrder, setHasPreview } = useContext(BookFilterContext)
 
   const dropdownRef = useRef()
 
   const Filters = ['A-Z', `Nº de Páginas`, 'Grátis', 'Prévia']
+
+  const start = index * maxResult + 1
+  let end = (index + 1) * maxResult
+
+  if (end > totalItems) end = totalItems
+
+  const faixaTexto = `${start}-${end}` 
 
   const hasNextPage = index + maxResult < totalItems
   const hasPrevPage = index > 0
@@ -234,7 +246,7 @@ export default function BooksMain ({ showFilter = true, children }) {
           )}
         </div>
       )}
-      <p className='text-center'>{stateNum}</p>
+      <p className='text-center'>{faixaTexto}</p>
 
       <div className='flex flex-wrap justify-evenly px-10 gap-10'>
         {children}
@@ -286,9 +298,11 @@ export default function BooksMain ({ showFilter = true, children }) {
             onClick={() => {
               controlNextPage(2)
             }}
-          > 
+          >
             <ChevronDoubleRightIcon
-              className={`w-8 ${!controlButton2 ? 'fill-zinc-300' : 'fill-black'}`}
+              className={`w-8 ${
+                !controlButton2 ? 'fill-zinc-300' : 'fill-black'
+              }`}
             />
           </button>
         </div>
