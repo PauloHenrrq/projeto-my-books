@@ -9,6 +9,7 @@ import { BookSearchContext } from '../Context/BookSearchContext/BookSearchContex
 import { BookFilterContext } from '../Context/BookFilterContext/BookFilterContextDefinition'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
+import FavoriteButton from './FavoriteButton'
 
 export default function BooksCard () {
   const [favorites, setFavorites] = useState({})
@@ -117,13 +118,15 @@ export default function BooksCard () {
             style={{ transformStyle: 'preserve-3d' }}
           >
             <div>
-              <span onClick={() => toggleFavorite(book.id)}>
-                {isFavorite(book.id) ? (
-                  <StarIcon className='absolute right-0 w-5 h-5 text-yellow-300 cursor-pointer ' />
-                ) : (
-                  <StarIconOutline className='absolute right-0 w-5 h-5 text-yellow-300 cursor-pointer z-50' />
-                )}
-              </span>
+              <FavoriteButton
+                id={book.id}
+                FavoriteIconON={
+                  <StarIcon className='absolute -left-2 -top-3 w-7 h-7 text-yellow-400 cursor-pointer z-20' />
+                }
+                FavoriteIconOFF={
+                  <StarIcon className='absolute -left-2 -top-3 w-7 h-7 text-yellow-800 cursor-pointer z-20' />
+                }
+              />
             </div>
             <div className='absolute top-[0.5%] h-[100%] border border-zinc-400 w-full bg-zinc-100 rounded-md z-0 shadow-inner group-hover:brightness-95 transition-all duration-300' />
 
