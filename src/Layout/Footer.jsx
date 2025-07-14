@@ -6,7 +6,7 @@ export default function Footer() {
         <a href="#" className="hover:text-[#93C5FD]">Início</a>
         <a href="#" className="hover:text-[#93C5FD]">Pesquisa por Filtro</a>
         <a href="#" className="hover:text-[#93C5FD]">Livros</a>
-      </nav>
+      </nav> 
 
       
       <div className="space-y-2">

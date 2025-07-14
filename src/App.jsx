@@ -7,7 +7,7 @@ import Books from "./Pages/Books.jsx";
 function App() {
   return (
     <>
-      <BooksMain />
+      
     </>
   )
 }
