@@ -251,7 +251,7 @@ export default function BooksMain({
               ) : (
                 <button
                   key={index}
-                  className={`border-2 rounded-full px-8 py-2 bg-none cursor-pointer hover:bg-gray-200 transition-all duration-200 whitespace-nowrapgit ${
+                  className={`border-2 rounded-full px-8 py-2 bg-none cursor-pointer hover:bg-gray-200 transition-all duration-200 whitespace-nowrap${
                     filter == "Nº de Páginas" ? "pr-4" : ""
                   } ${
                     buttonActive[index]
