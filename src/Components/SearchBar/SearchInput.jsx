@@ -19,7 +19,7 @@ function SerachInput ({ value, onChange, onSearch }) {
       {value && (
         <span
           onClick={() => onChange({ target: { value: '' } })}
-          className='absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer text-xl mr-2'
+          className='absolute right-10 top-[53%] transform -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer text-xl mr-2'
         >
           &#10005; 
         </span>

@@ -4,19 +4,17 @@ import { useNavigate } from 'react-router-dom'
 import {
   getFavoritesFromStorage,
   saveFavoritesToStorage
-} from '../utils/localStorageFavorites'
-import { BookSearchContext } from '../Context/BookSearchContext/BookSearchContextDefinition'
-import { BookFilterContext } from '../Context/BookFilterContext/BookFilterContextDefinition'
+} from '../../utils/localStorageFavorites'
+import { BookSearchContext } from '../../Context/BookSearchContext/BookSearchContextDefinition'
+import { BookFilterContext } from '../../Context/BookFilterContext/BookFilterContextDefinition'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
-import FavoriteButton from './FavoriteButton'
+import FavoriteButton from '../FavoriteButton'
 
-export default function BooksCard () {
-  const [favorites, setFavorites] = useState({})
+export default function BooksCard ({ renderBooks = false }) {
   const { sortOrder, hasPreview } = useContext(BookFilterContext)
-  const { books, error, isLoading, totalItems, updateSearchParams } =
+  let { books, error, isLoading, totalItems, updateSearchParams } =
     useContext(BookSearchContext)
-  const { index } = updateSearchParams
 
   const navigate = useNavigate()
   const navigateToBooksInfo = id => {
@@ -24,14 +22,12 @@ export default function BooksCard () {
   }
 
   useEffect(() => {
-    const saved = getFavoritesFromStorage()
-    setFavorites(saved)
-  }, [])
+    if (!books && totalItems === 0) {
+      updateSearchParams({ index: 0 })
+    }
+  }, [books, totalItems])
 
-  function isFavorite (id) {
-    const map = getFavoritesFromStorage()
-    return Boolean(map[id])
-  }
+  books = renderBooks ? renderBooks : books
 
   const sortedBooks = Array.isArray(books)
     ? [...books].sort((a, b) => {
@@ -40,7 +36,7 @@ export default function BooksCard () {
 
         if (sortOrder === 'A-Z') return titleA.localeCompare(titleB)
         if (sortOrder === 'Z-A') return titleB.localeCompare(titleA)
-        return 0
+        return books
       })
     : []
 
@@ -49,19 +45,6 @@ export default function BooksCard () {
         ['PARTIAL', 'ALL_PAGES'].includes(book.accessInfo?.viewability)
       )
     : sortedBooks
-
-  const toggleFavorite = bookId => {
-    const updated = { ...favorites }
-
-    if (updated[bookId]) {
-      delete updated[bookId]
-    } else {
-      updated[bookId] = true
-    }
-
-    setFavorites(updated)
-    saveFavoritesToStorage(updated)
-  }
 
   if (error) {
     return (
@@ -91,19 +74,8 @@ export default function BooksCard () {
 
   if (Array.isArray(books) && books.length === 0) {
     return (
-      <h1 className='title-h1 mb-92'>
-        Não existe nenhum livro grátis dessa pesquisa!
-      </h1>
-    )
-  }
-
-  if (totalItems === 0 || !books) {
-    if (!books) {
-      updateSearchParams({ index: 0 })
-    }
-    return (
-      <h1 className='title-h1 mb-92'>
-        Nenhum livro encontrado 😕. Tente uma nova busca! 📚
+      <h1 className='title-h1 mb-92 mt-5'>
+        Nenhum livro encontrado 😕 Tente uma nova busca! 📚
       </h1>
     )
   }
@@ -118,13 +90,9 @@ export default function BooksCard () {
             style={{ transformStyle: 'preserve-3d' }}
           >
             <div>
-              <FavoriteButton
-                id={book.id}
-                FavoriteIconON={<StarIcon />}
-                FavoriteIconOFF={<StarIconOutline />}
-              />
+              <FavoriteButton id={book.id} />
             </div>
-            <div className='absolute top-[0.5%] h-[100%] border border-zinc-400 w-full bg-zinc-100 rounded-md z-0 shadow-inner group-hover:brightness-95 transition-all duration-300' />
+            <div className='absolute top-[0.5%] h-[100%] border border-zinc-400 group-hover:shadow-[inset_-1px_-1px_5px_black] w-full bg-zinc-100 rounded-md z-0 shadow-inner group-hover:brightness-95 transition-all duration-300' />
 
             <div className='flex flex-col h-[92%] gap-1 z-10'>
               {book.volumeInfo.imageLinks?.thumbnail ? (
@@ -137,7 +105,7 @@ export default function BooksCard () {
                 </div>
               ) : (
                 <div className='flex justify-center'>
-                  <div className='relative flex justify-center items-center  left-2 w-[192px] h-[242px] rounded shadow-[0_2px_7px_0_black]'>
+                  <div className='relative flex justify-center items-center left-2 w-[192px] h-[242px] rounded shadow-[0_2px_7px_0_black]'>
                     <h1 className='title-h1 -rotate-32'>Indisponível</h1>
                   </div>
                 </div>
@@ -155,7 +123,7 @@ export default function BooksCard () {
 
             {book.volumeInfo.publishedDate ? (
               <p className='relative left-2 mt-1 text-[#888]'>
-                Publicado em: {book.volumeInfo.publishedDate}
+                Publicado em: {book.volumeInfo.publishedDate.split('-')[0]}
               </p>
             ) : (
               <p className='relative left-2 mt-1 text-[#888]'>

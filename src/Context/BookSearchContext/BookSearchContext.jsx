@@ -38,10 +38,7 @@ export const BookSearchProvider = ({ children }) => {
   ) => {
     const startIndex = index * maxResult
 
-    // 🔹 MODO GRATUITO (Google retorna totalItems absurdamente alto)
     if (isFree) {
-      console.log('🔥 Modo isFree detectado')
-
       setIsLoading(true)
       setError(null)
       setBooks(null)
@@ -64,7 +61,7 @@ export const BookSearchProvider = ({ children }) => {
         const hasMorePage2 = nextPage2?.items?.length > 0
 
         setBooks(booksCurrent)
-        setTotalItems(999999) // impede travamento da navegação
+        setTotalItems(999999)
         setControlButton1(hasMorePage1)
         setControlButton2(hasMorePage2)
 
@@ -76,10 +73,9 @@ export const BookSearchProvider = ({ children }) => {
         setIsLoading(false)
       }
 
-      return // impede execução do restante
+      return
     }
 
-    // 🔹 MODO NORMAL
     console.log('index: ', index)
 
     setIsLoading(true)
@@ -92,6 +88,14 @@ export const BookSearchProvider = ({ children }) => {
         APIBooks(queryFilter, query, false, maxResult, startIndex),
         APIBooks(queryFilter, query, false, maxResult, (index + 1) * maxResult)
       ])
+
+      if (!data || data.totalItems === 0) {
+        setBooks([])
+        setTotalItems(0)
+        setControlButton1(false)
+        setControlButton2(false)
+        return
+      }
 
       const remainingNext1 = nextPage1?.items?.length || 0
       const remainingNext2 = nextPage2?.items?.length || 0
