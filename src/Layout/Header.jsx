@@ -1,50 +1,186 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { Bars3Icon, XMarkIcon} from "@heroicons/react/24/solid";
+import {
+  HomeIcon,
+  ArrowRightEndOnRectangleIcon,
+  ArrowLeftEndOnRectangleIcon,
+  UserPlusIcon,
+  StarIcon,
+  UserIcon
+} from "@heroicons/react/20/solid";
 
 export default function Header() {
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const { user, isLogged, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
-    <header className="flex items-center justify-between px-8 py-4 bg-[#F9FAFB] shadow-md">
-      
-      <div className="text-2xl font-bold text-[#1F2937] flex items-center gap-2">
-        📚 MyBooks
-      </div>
-
-      
-      <nav className="flex items-center space-x-6">
-        
-        <a href="#" className="text-[#3B82F6] hover:text-[#93C5FD] font-medium">
-          Meus Livros
-        </a>
-
-       
-        <div
-          onClick={() => setShowMenu(!showMenu)}
-          className="w-10 h-10 bg-[#3B82F6] rounded-full flex items-center justify-center text-white font-bold cursor-pointer"
-        >
-          P
-        </div>
-      </nav>
-
-      {showMenu && (
-        <div className="fixed top-0 right-0 h-full w-56 bg-white shadow-lg z-50 flex flex-col p-4 space-y-4 border-l">
-          <button
-            onClick={() => setShowMenu(false)}
-            className="self-end text-[#3B82F6] font-bold"
+    <header className="bg-[var(--cinza-claro)] border-b border-gray-300">
+      <div className="flex items-center justify-between px-6 py-4 w-full">
+        {/* telas menores*/}
+        <div className="md:hidden">
+          <h1
+            className="text-xl font-bold text-[var(--titulo)] cursor-pointer"
+            onClick={() => navigate("/")}
           >
-            ✕
-          </button>
-          <a href="#" className="text-[#1F2937] hover:text-[#3B82F6] font-medium">
-            Perfil
-          </a>
-          <a href="#" className="text-[#1F2937] hover:text-[#3B82F6] font-medium">
-            Contato
-          </a>
-          <a href="#" className="text-[#1F2937] hover:text-[#3B82F6] font-medium">
-            Sair
-          </a>
+            📚 MyBooks
+          </h1>
         </div>
-      )}
+        <div className="md:hidden">
+          <button
+            onClick={() => setShowMobileMenu(true)}
+            className="text-[var(--texto)] w-6 h-6 block"
+            aria-label="Abrir menu"
+          >
+            <Bars3Icon />
+          </button>
+        </div>
+       
+        <nav
+          className={`fixed top-0 right-0 h-full w-3/4 bg-[var(--cinza-claro)] border-l border-gray-300 z-11 transform transition-transform duration-300 ease-in-out
+          ${showMobileMenu ? "translate-x-0" : "translate-x-full"}
+        `}
+        >
+          <div className="flex items-center justify-between p-4 border-b border-gray-300">
+            <div className="text-lg font-semibold">Explorar MyBooks</div>
+            <button
+              onClick={() => setShowMobileMenu(false)}
+              aria-label="Fechar menu"
+              className="text-[var(--texto)] w-6 h-6 block"
+            >
+              <XMarkIcon />
+            </button>
+          </div>
+
+          <div className="p-4 space-y-4 flex flex-col items-start">
+            {isLogged && (
+              <h2 className="text-[var(--titulo)] font-semibold text-xl mb-5">
+                {user.username}
+              </h2>
+            )}
+            <div
+              className="flex flex-row items-center gap-2 text-[var(--azul-vivido)]"
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate("/");
+              }}
+            >
+              <button className="font-medium">Página inicial</button>
+              <HomeIcon className="w-4 h-4" />
+            </div>
+            <div
+              className="flex flex-row items-center gap-2 text-[var(--azul-vivido)]"
+              onClick={() => navigate("/mybooks")}
+            >
+              <button className="font-medium ">Favoritos</button>
+              <StarIcon className="w-4 h-4" />
+            </div>
+            {isLogged ? (
+              <>
+                <div className="flex flex-row items-center gap-2 text-[var(--azul-vivido)]">
+                  <button
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      logout();
+                    }}
+                    className="font-medium"
+                  >
+                    Sair
+                  </button>
+                  <ArrowLeftEndOnRectangleIcon className="w-4 h-4" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div
+                  className="flex flex-row items-center gap-2 text-[var(--azul-vivido)]"
+                  onClick={() => navigate("/login")}
+                >
+                  <button className="font-medium">Entrar</button>
+                  <ArrowRightEndOnRectangleIcon className="w-4 h-4" />
+                </div>
+                <div
+                  className="flex flex-row items-center gap-2 text-[var(--azul-vivido)]"
+                  onClick={() => navigate("/register")}
+                >
+                  <button className="font-medium">Cadastre-se</button>
+                  <UserPlusIcon className="w-4 h-4" />
+                </div>
+              </>
+            )}
+          </div>
+        </nav>
+
+        {showMobileMenu && (
+          <div
+            onClick={() => setShowMobileMenu(false)}
+            className="md:hidden fixed inset-0 z-10"
+          />
+        )}
+
+        {/* telas maiores */}
+        <div className="hidden md:flex space-x-4">
+          <div
+            className="text-2xl font-bold text-[var(--titulo)] cursor-pointer"
+            onClick={() => navigate("/")}
+          >
+            📚 MyBooks
+          </div>
+          <nav className="hidden md:flex space-x-4">
+            <button
+              className="text-[var(--azul-vivido)] hover:text-[var(--azul-claro)]  cursor-pointer"
+              onClick={() => navigate("/")}
+            >
+              Página inicial
+            </button>
+            <button
+              className="text-[var(--azul-vivido)] hover:text-[var(--azul-claro)]  cursor-pointer"
+              onClick={() => navigate("/mybooks")}
+            >
+              Favoritos
+            </button>
+          </nav>
+        </div>
+
+        <div className="hidden md:flex space-x-4">
+          {isLogged ? (
+            <>
+              <div className="flex flex-row items-center gap-2 bg-[var(--azul-vivido)] text-[var(--cinza-claro)] px-4 py-2 rounded-3xl ">
+                <UserIcon className="w-5 h-5" />
+                <p>{user.username}</p>
+              </div>
+              <div
+                className="flex flex-row items-center gap-2 bg-[var(--azul-vivido)]  hover:bg-[var(--azul-claro)] text-[var(--cinza-claro)] px-4 py-2 rounded-3xl cursor-pointer"
+                onClick={() => logout()}
+              >
+                <ArrowLeftEndOnRectangleIcon className="w-4 h-4" />
+                <p className="font-medium">Sair</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className="flex flex-row items-center gap-2 bg-gray-500 hover:bg-gray-400 text-[var(--cinza-claro)] px-4 py-2 rounded-3xl cursor-pointer "
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
+                <p className="font-medium">Entrar</p>
+              </div>
+              <div
+                className="flex flex-row items-center gap-2 bg-[var(--azul-vivido)]  hover:bg-[var(--azul-claro)] text-[var(--cinza-claro)] px-4 py-2 rounded-3xl cursor-pointer"
+                onClick={() => navigate("/register")}
+              >
+                <UserPlusIcon className="w-5 h-5" />
+                <p className="font-medium">Cadastre-se</p>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </header>
   );
 }

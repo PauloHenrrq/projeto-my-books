@@ -5,6 +5,7 @@ function SerachInput({ value, onChange, onSearch }) {
     <div className="flex items-center flex-grow relative w-full">
       <input
         type="text"
+        maxLength="100"
         value={value}
         onChange={onChange}
         placeholder="Digite Sua Busca..."
@@ -13,7 +14,7 @@ function SerachInput({ value, onChange, onSearch }) {
             onSearch();
           }
         }}
-        className="w-full bg-[var(--cinza-claro)] text-[var(--texto)] placeholder-gray-400 border border-gray-300 rounded-md px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[var(--azul-vivido)]"
+        className="w-full text-[var(--texto)] placeholder-gray-400 border border-gray-300 rounded-xl px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[var(--azul-vivido)]"
       />
       <MagnifyingGlassIcon
         onClick={onSearch}
