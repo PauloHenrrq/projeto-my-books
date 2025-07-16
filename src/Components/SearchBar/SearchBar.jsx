@@ -8,11 +8,9 @@ const SearchBar = () => {
   const [queryFilterOption, setFilterQueryOption] = useState('Todos')
   const { updateSearchParams } = useContext(BookSearchContext)
 
-  const handleQueryOption = optionText => {
-    setFilterQueryOption(optionText)
-
-    console.log(optionText) 
-  }
+  const handleQueryOption = (optionText) => {
+    setFilterQueryOption(optionText);
+  };
 
   const handleQueryInput = e => {
     setQuery(e.target.value)
@@ -45,7 +43,7 @@ const SearchBar = () => {
   }
 
   return (
-    <div className='flex m-auto mt-5 sm:flex-row items-center gap-2 sm:gap-4 bg-[var(--cinza-claro)] px-4 sm:px-6 py-3 border border-gray-300 rounded-2xl w-full max-w-2xl'>
+    <div className="flex flex-col md:flex-row items-center w-full max-w-64 gap-2 md:max-w-2xl px-6 py-3 mx-auto my-4  border border-gray-300 rounded-xl bg-[var(--cinza-claro)]  ">
       <FilterDropdown value={queryFilterOption} onClick={handleQueryOption} />
       <SerachInput
         value={query}

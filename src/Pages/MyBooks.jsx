@@ -19,4 +19,4 @@ const MyBooks = () => {
   )
 }
 
-export default MyBooks
+export default MyBooks;

@@ -1,79 +1,186 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { AuthContext } from '../Context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
+import {
+  HomeIcon,
+  ArrowRightEndOnRectangleIcon,
+  ArrowLeftEndOnRectangleIcon,
+  UserPlusIcon,
+  StarIcon,
+  UserIcon
+} from '@heroicons/react/20/solid'
 
 export default function Header () {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [showMenu, setShowMenu] = useState(false)
-
-  const user = {
-    name: 'Dennis Araújo',
-    email: 'dennis@gmail.com'
-  }
-
-  const handleScrollToFooter = () => {
-    const footer = document.getElementById('footer')
-    footer?.scrollIntoView({ behavior: 'smooth' })
-    setShowMenu(false)
-  }
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const { user, isLogged, logout } = useContext(AuthContext)
+  const navigate = useNavigate()
 
   return (
-    <>
-      <header className='flex items-center justify-between px-8 py-4 bg-[#F9FAFB] shadow-md'>
-        <div className='text-2xl font-bold text-[#1F2937]'>📚 MyBooks</div>
+    <header className='bg-[var(--cinza-claro)] border-b border-gray-300'>
+      <div className='flex items-center justify-between px-6 py-4 w-full'>
+        {/* telas menores*/}
+        <div className='md:hidden'>
+          <h1
+            className='text-xl font-bold text-[var(--titulo)] cursor-pointer'
+            onClick={() => navigate('/')}
+          >
+            📚 MyBooks
+          </h1>
+        </div>
+        <div className='md:hidden'>
+          <button
+            onClick={() => setShowMobileMenu(true)}
+            className='text-[var(--texto)] w-6 h-6 block'
+            aria-label='Abrir menu'
+          >
+            <Bars3Icon />
+          </button>
+        </div>
 
-        {isLoggedIn ? (
-          <div className='relative'>
+        <nav
+          className={`fixed top-0 right-0 h-full w-3/4 bg-[var(--cinza-claro)] border-l border-gray-300 z-11 transform transition-transform duration-300 ease-in-out
+          ${showMobileMenu ? 'translate-x-0' : 'translate-x-full'}
+        `}
+        >
+          <div className='flex items-center justify-between p-4 border-b border-gray-300'>
+            <div className='text-lg font-semibold'>Explorar MyBooks</div>
             <button
-              onClick={() => setShowMenu(!showMenu)}
-              className='flex items-center gap-2 bg-[#3B82F6] text-white px-4 py-2 rounded-full cursor-pointer'
+              onClick={() => setShowMobileMenu(false)}
+              aria-label='Fechar menu'
+              className='text-[var(--texto)] w-6 h-6 block'
             >
-              {user.name}
-              <span className='text-xl'>🔵</span>
+              <XMarkIcon />
             </button>
+          </div>
 
-            {showMenu && (
-              <div className='absolute right-0 mt-2 w-64 bg-white border shadow-lg rounded-lg p-4 space-y-2 z-50'>
-                <div>
-                  <p className='font-semibold text-[#1F2937]'>{user.name}</p>
-                  <p className='text-sm text-gray-500'>{user.email}</p>
+          <div className='p-4 space-y-4 flex flex-col items-start'>
+            {isLogged && (
+              <h2 className='text-[var(--titulo)] font-semibold text-xl mb-5'>
+                Olá, {user.username}
+              </h2>
+            )}
+            <div
+              className='flex flex-row items-center gap-2 text-[var(--azul-vivido)]'
+              onClick={() => {
+                setShowMobileMenu(false)
+                navigate('/')
+              }}
+            >
+              <button className='font-medium'>Página inicial</button>
+              <HomeIcon className='w-4 h-4' />
+            </div>
+            <div
+              className='flex flex-row items-center gap-2 text-[var(--azul-vivido)]'
+              onClick={() => navigate('/mybooks')}
+            >
+              <button className='font-medium '>Favoritos</button>
+              <StarIcon className='w-4 h-4' />
+            </div>
+            {isLogged ? (
+              <>
+                <div className='flex flex-row items-center gap-2 text-[var(--azul-vivido)]'>
+                  <button
+                    onClick={() => {
+                      setShowMobileMenu(false)
+                      logout()
+                    }}
+                    className='font-medium'
+                  >
+                    Sair
+                  </button>
+                  <ArrowLeftEndOnRectangleIcon className='w-4 h-4' />
                 </div>
-
-                <button className='w-full text-left text-[#3B82F6] hover:underline cursor-pointer'>
-                  Configurações da Conta
-                </button>
-
-                <button
-                  onClick={handleScrollToFooter}
-                  className='w-full text-left text-[#3B82F6] hover:underline cursor-pointer'
+              </>
+            ) : (
+              <>
+                <div
+                  className='flex flex-row items-center gap-2 text-[var(--azul-vivido)]'
+                  onClick={() => navigate('/login')}
                 >
-                  Contato
-                </button>
-
-                <button
-                  onClick={() => {
-                    setIsLoggedIn(false)
-                    setShowMenu(false)
-                  }}
-                  className='w-full text-left text-[#3B82F6] hover:underline cursor-pointer'
+                  <button className='font-medium'>Entrar</button>
+                  <ArrowRightEndOnRectangleIcon className='w-4 h-4' />
+                </div>
+                <div
+                  className='flex flex-row items-center gap-2 text-[var(--azul-vivido)]'
+                  onClick={() => navigate('/register')}
                 >
-                  Sair
-                </button>
-              </div>
+                  <button className='font-medium'>Cadastre-se</button>
+                  <UserPlusIcon className='w-4 h-4' />
+                </div>
+              </>
             )}
           </div>
-        ) : (
-          <div className='space-x-4'>
-            <button
-              onClick={() => setIsLoggedIn(true)}
-              className='bg-[#3B82F6] text-white px-4 py-2 rounded cursor-pointer'
-            >
-              Login
-            </button>
-            <button className='bg-[#93C5FD] text-white px-4 py-2 rounded cursor-pointer'>
-              Cadastre-se
-            </button>
-          </div>
+        </nav>
+
+        {showMobileMenu && (
+          <div
+            onClick={() => setShowMobileMenu(false)}
+            className='md:hidden fixed inset-0 z-10'
+          />
         )}
-      </header>
-    </>
+
+        {/* telas maiores */}
+        <div className='hidden md:flex gap-10 space-x-4'>
+          <div
+            className='text-2xl font-bold text-[var(--titulo)] cursor-pointer'
+            onClick={() => navigate('/')}
+          >
+            📚 MyBooks
+          </div>
+          <nav className='hidden md:flex gap-2 space-x-4'>
+            <button
+              className='text-[var(--azul-vivido)] hover:text-blue-700 transition duration-200 cursor-pointer'
+              onClick={() => navigate('/')}
+            >
+              Página inicial
+            </button>
+            <button
+              className='text-[var(--azul-vivido)] hover:text-blue-700 duration-200 cursor-pointer'
+              onClick={() => navigate('/mybooks')}
+            >
+              Favoritos
+            </button>
+          </nav>
+        </div>
+
+        <div className='hidden md:flex space-x-4'>
+          {isLogged ? (
+            <>
+              <div className='flex flex-row items-center gap-2 bg-[var(--azul-vivido)] text-[var(--cinza-claro)] px-4 py-2 rounded-3xl '>
+                <UserIcon className='w-5 h-5' />
+                <p className='cursor-default'>{user.username}</p>
+              </div>
+              <div
+                className='flex flex-row items-center gap-2 bg-[var(--azul-vivido)]  hover:bg-[var(--azul-claro)] text-[var(--cinza-claro)] px-4 py-2 rounded-3xl cursor-pointer'
+                onClick={() => logout()}
+              >
+                <ArrowLeftEndOnRectangleIcon className='w-4 h-4' />
+                <p className='font-medium'>Sair</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className='flex flex-row items-center gap-2 bg-gray-500 hover:bg-gray-400 text-[var(--cinza-claro)] px-4 py-2 rounded-3xl cursor-pointer '
+                onClick={() => {
+                  navigate('/login')
+                }}
+              >
+                <ArrowRightEndOnRectangleIcon className='w-5 h-5' />
+                <p className='font-medium'>Entrar</p>
+              </div>
+              <div
+                className='flex flex-row items-center gap-2 bg-[var(--azul-vivido)]  hover:bg-[var(--azul-claro)] text-[var(--cinza-claro)] px-4 py-2 rounded-3xl cursor-pointer'
+                onClick={() => navigate('/register')}
+              >
+                <UserPlusIcon className='w-5 h-5' />
+                <p className='font-medium'>Cadastre-se</p>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </header>
   )
 }
