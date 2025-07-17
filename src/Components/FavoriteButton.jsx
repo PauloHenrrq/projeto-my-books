@@ -6,7 +6,7 @@ import {
 import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
 
-const FavoriteButton = ({ id, button = false }) => {
+const FavoriteButton = ({ id, button = false, onChange }) => {
   const [isFav, setIsFav] = useState(() => {
     const storage = getFavoritesFromStorage()
     return Boolean(storage[id])
@@ -26,6 +26,7 @@ const FavoriteButton = ({ id, button = false }) => {
     }
 
     saveFavoritesToStorage(storage)
+    if (onChange) onChange()
   }
 
   return (
