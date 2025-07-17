@@ -88,7 +88,7 @@ const LoginForm = () => {
         </form>
         <Link
           to={"/register"}
-          className="text-[var(--azul-escuro)] hover:text-[var(--azul-claro)] mt-2"
+          className="text-[var(--azul-escuro)] hover:text-blue-900 mt-2"
         >
           Ainda não tem uma conta? Cadastre-se agora.
         </Link>

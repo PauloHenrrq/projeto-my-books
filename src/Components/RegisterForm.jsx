@@ -146,7 +146,7 @@ const RegisterForm = () => {
       </form>
       <Link
         to={"/login"}
-        className="text-[var(--azul-escuro)] hover:text-[var(--azul-claro)]"
+        className="text-[var(--azul-escuro)] hover:text-blue-900"
       >
         Já tem uma conta? Faça login aqui.
       </Link>
