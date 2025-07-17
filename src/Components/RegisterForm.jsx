@@ -38,12 +38,12 @@ const RegisterForm = () => {
   const password = watch("password");
 
   return (
-    <div className=" flex flex-col w-full items-center gap-10 ">
+    <div className=" flex flex-col w-full items-center gap-6 ">
       <div className="flex flex-col items-center gap-2 mt-12 p-2 ">
-        <h1 className="text-4xl text-[var(--titulo)] text-center font-bold md:text-5xl">
+        <h1 className="text-3xl text-[var(--titulo)] text-center font-bold md:text-5xl">
           Registre-se no MyBooks
         </h1>
-        <p className="text-xl text-center text-[var(--texto)] md: text-medium">
+        <p className="text-center text-[var(--texto)] md:text-xl">
           Seu catálogo de biblioteca disponível em qualquer lugar, a qualquer hora.
         </p>
       </div>
@@ -51,7 +51,7 @@ const RegisterForm = () => {
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="w-full max-w-72 mb-5 bg-[var(--cinza-claro)] p-6 rounded-2xl space-y-4 md:max-w-md"
+        className="w-full max-w-72 mb-5 bg-[var(--cinza-claro)] p-8 rounded-2xl space-y-4 md:max-w-md"
       >
         <div>
           <label className="block text-sm font-medium text-[var(--texto)]">
