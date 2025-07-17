@@ -58,6 +58,21 @@ export default function BooksMain ({
   const hasPrevPage = controlIndex > 0
 
   useEffect(() => {
+    const handler = event => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setNumberPage(false)
+        setButtonActive(prev => ({
+          ...prev,
+          1: false
+        }))
+      }
+    }
+
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  useEffect(() => {
     setSortOrder(sorterOrder)
   }, [sorterOrder])
 
@@ -199,6 +214,26 @@ export default function BooksMain ({
               )
             ) : null
           )}
+        </div>
+      )}
+
+      {numberPage && (
+        <div className='min-md:hidden fixed inset-0 z-50 w-full h-screen border border-red bg-black/30'>
+          <div className='relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-400 rounded-xl shadow-lg w-40 my-auto text-center'>
+            {Array.from({ length: 4 }, (_, i) => (
+              <p
+                key={i}
+                className={`hover:bg-zinc-300 transition-all duration-200 cursor-pointer p-2 font-bold text-xl ${
+                  i === 3 ? 'rounded-b-lg' : 'border-b border-gray-500'
+                }`}
+                onMouseDown={() => {
+                  updateNum(i)
+                }}
+              >
+                1 - {(i + 1) * 10}
+              </p>
+            ))}
+          </div>
         </div>
       )}
 
