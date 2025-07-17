@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { getAllIdsFromStorage } from '../../utils/localStorageFavorites'
+import { getAllIdsFromStorage, getFavoritesFromStorage } from '../../utils/localStorageFavorites'
 import { APIBooksId } from '../../Routes/server/api'
 import BooksCard from './BooksCard'
 import BooksMain from './BooksMain'
+import { Link } from 'react-router-dom'
 
 const MyBooksMain = () => {
+  const [allBooks, setAllBooks] = useState([])
   const [books, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
   const [index, setIndex] = useState(0)
@@ -26,15 +28,23 @@ const MyBooksMain = () => {
       })
 
       const results = await Promise.all(promises)
+
       const validBooks = results.filter(book => book && book.volumeInfo)
 
+      setLoading(false)
+      setAllBooks(validBooks)
       setBooks(validBooks)
       setTotalItems(validBooks.length)
-      setLoading(false)
     }
 
     fetchBooks()
   }, [])
+
+  const applyFavoritesFilter = () => {
+    const storage = getFavoritesFromStorage()
+    const newBooks = allBooks.filter(book => storage[book.id])
+    setBooks(newBooks)
+  }
 
   const paginatedBooks = books.slice(index * maxResult, (index + 1) * maxResult)
 
@@ -57,9 +67,15 @@ const MyBooksMain = () => {
 
   if (books.length === 0) {
     return (
-      <h1 className='title-h1 mb-92 mt-5'>
-        Nenhum livro encontrado nos favoritos.
-      </h1>
+      <div className='flex flex-col gap-10 text-center m-auto flex-1'>
+        <h1 className='title-h1 mt-10'>Você não possui livros favoritados.</h1>
+        <Link
+          to='/'
+          className='w-fit mx-auto text-lg font-bold bg-blue-600 py-2 px-5 rounded-xl text-white hover:bg-blue-700 transition-all duration-200 cursor-pointer'
+        >
+          Voltar
+        </Link>
+      </div>
     )
   }
 
@@ -75,7 +91,7 @@ const MyBooksMain = () => {
       onUpdateIndex={setIndex}
       onUpdateMaxResult={setMaxResult}
     >
-      <BooksCard externalBooks={paginatedBooks} />
+      <BooksCard externalBooks={paginatedBooks} changeFavorites={applyFavoritesFilter} />
     </BooksMain>
   )
 }

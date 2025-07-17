@@ -13,7 +13,8 @@ import FavoriteButton from '../FavoriteButton'
 
 export default function BooksCard ({
   renderBooks = false,
-  externalBooks = null
+  externalBooks = null,
+  changeFavorites
 }) {
   const { sortOrder, hasPreview } = useContext(BookFilterContext)
 
@@ -95,7 +96,7 @@ export default function BooksCard ({
             onClick={() => navigateToBooksInfo(book.id)}
           >
             <div>
-              <FavoriteButton id={book.id} />
+              <FavoriteButton id={book.id} onChange={changeFavorites} />
             </div>
 
             <div className='flex flex-col justify-center items-center h-[92%] gap-1 '>
