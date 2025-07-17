@@ -8,7 +8,7 @@
   <img src="src/assets/Principal-MyBooks.jpeg" alt="Início MyBooks" width="800" />
 </p>  
 
-> MyBooks é o lugar perfeito para você que está à procura de novos livros! Possuindo um sistema de Login e Registro, uma página inicial com vários filtros para melhor pesquisa e com uma renderização de Cards com um sistema de favoritos implementado. Mas então, você encontrou aquele livro que estava procurando? No nosso site você pode favoritar ele para salvar e poder visualizar a hora que quiser.
+> MyBooks é o lugar perfeito para você que está à procura de novos livros! Possuindo um sistema de Login e Registro, uma página inicial com vários filtros para melhor pesquisa e com uma renderização de Cards juntamente com um sistema de favoritos implementado. Mas então, você encontrou aquele livro que estava procurando? No nosso site você pode favoritar ele para salvar e poder visualizar a hora que quiser.
 ## 📲 Visualização
 - Acesse o nosso site: [Clique aqui para acessar o MyBooks](https://mybooks-ebon.vercel.app/)
 ## 🛠 Tecnologias utilizadas
