@@ -1,23 +1,23 @@
-import { useState, useEffect, useRef } from 'react'
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid'
+import { useState, useEffect, useRef } from "react";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
-function FilterDropdown ({ value, onClick }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const queryFilterOptions = ['Todos', 'Assunto', 'Autor', 'Título']
+function FilterDropdown({ value, onClick }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const queryFilterOptions = ["Todos", "Assunto", "Autor", "Título"];
 
-  const dropdownRef = useRef()
+  const dropdownRef = useRef();
 
-  const toggleDropdown = () => setIsOpen(prev => !prev)
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   useEffect(() => {
-    const handler = event => {
+    const handler = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [])
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
     <div ref={dropdownRef} className="relative inline-block w-fit">
@@ -28,12 +28,8 @@ function FilterDropdown ({ value, onClick }) {
         } rounded-md cursor-pointer`}
       >
         {value}
-        <span className='ml-2 w-5 h-5'>
-          <ChevronDownIcon
-            className={`relative bottom-0.5 w-6 transform transition-transform duration-300 ${
-              isOpen ? 'rotate-180' : 'rotate-x-0'
-            }`}
-          />
+        <span className="ml-2 w-5 h-5">
+          {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
         </span>
       </button>
 
@@ -43,10 +39,10 @@ function FilterDropdown ({ value, onClick }) {
             <li
               key={option}
               onClick={() => {
-                setIsOpen(false)
-                onClick(option)
+                setIsOpen(false);
+                onClick(option);
               }}
-              className='cursor-pointer w-full px-4 py-2 hover:bg-gray-200 text-[var(--texto)]'
+              className="cursor-pointer w-full px-4 py-2 hover:bg-gray-200 text-[var(--texto)]"
             >
               {option}
             </li>
@@ -54,7 +50,7 @@ function FilterDropdown ({ value, onClick }) {
         </ul>
       )}
     </div>
-  )
+  );
 }
 
-export default FilterDropdown
+export default FilterDropdown;
