@@ -3,7 +3,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { useForm } from "react-hook-form";
 import { register as registerUser } from "../utils/localStorageRegister";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const { login } = useContext(AuthContext);
@@ -38,7 +38,7 @@ const RegisterForm = () => {
   const password = watch("password");
 
   return (
-    <div className=" flex flex-col w-full items-center gap-6 ">
+    <div className="flex flex-col w-full items-center gap-3 ">
       <div className="flex flex-col items-center gap-2 mt-12 p-2 ">
         <h1 className="text-3xl text-[var(--titulo)] text-center font-bold md:text-5xl">
           Registre-se no MyBooks
@@ -51,7 +51,7 @@ const RegisterForm = () => {
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="w-full max-w-72 mb-5 bg-[var(--cinza-claro)] p-8 rounded-2xl space-y-4 md:max-w-md"
+        className="w-full max-w-72 bg-[var(--cinza-claro)] p-8 rounded-2xl space-y-4 md:max-w-md"
       >
         <div>
           <label className="block text-sm font-medium text-[var(--texto)]">
@@ -144,6 +144,12 @@ const RegisterForm = () => {
           Registrar
         </button>
       </form>
+      <Link
+        to={"/login"}
+        className="text-[var(--azul-escuro)] hover:text-[var(--azul-claro)]"
+      >
+        Já tem uma conta? Faça login aqui.
+      </Link>
       {sucessPopUp && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
           <div className="flex flex-col items-center gap-3 bg-white text-[var(--azul-vivido)] px-6 py-4 rounded-xl shadow-2xl animate-scale-in">

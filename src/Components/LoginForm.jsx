@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 const LoginForm = () => {
@@ -28,10 +28,10 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-[80vh] items-center">
-      <div className="w-full max-w-72 md:max-w-md m-auto ">
-        <div className="flex flex-col items-center p-2 ">
-          <h1 className="text-3xl text-[var(--titulo)] text-center mb-2 font-bold md:text-4xl">
+    <div className="flex flex-col w-full h-[80vh]">
+      <div className="flex flex-col items-center m-auto w-full ">
+        <div className="mb-4">
+          <h1 className="text-3xl text-[var(--titulo)] text-center font-bold md:text-4xl">
             Entrar
           </h1>
         </div>
@@ -39,7 +39,7 @@ const LoginForm = () => {
         <form
           onSubmit={handleSubmit(onSubmit)}
           noValidate
-          className="bg-[var(--cinza-claro)] p-8 rounded-2xl space-y-4"
+          className="bg-[var(--cinza-claro)] p-8 rounded-2xl space-y-4 w-full max-w-72 md:max-w-md"
         >
           <div>
             <label className="block text-sm font-medium text-[var(--texto)]">Email</label>
@@ -86,6 +86,12 @@ const LoginForm = () => {
             Entrar
           </button>
         </form>
+        <Link
+          to={"/register"}
+          className="text-[var(--azul-escuro)] hover:text-[var(--azul-claro)] mt-2"
+        >
+          Ainda não tem uma conta? Cadastre-se agora.
+        </Link>
       </div>
     </div>
   );
