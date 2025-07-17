@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { BookSearchContext } from './BookSearchContextDefinition'
 import { APIBooks } from '../../Routes/server/api'
+import { useLocation } from 'react-router-dom';
 
 export const BookSearchProvider = ({ children }) => {
   const [searchParams, setSearchParams] = useState({
@@ -18,6 +19,8 @@ export const BookSearchProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false)
   const isFirstRender = useRef(true)
 
+  const location = useLocation()
+
   function updateSearchParams (newParams) {
     setSearchParams(prev => ({
       ...prev,
@@ -26,7 +29,9 @@ export const BookSearchProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    updateSearchParams({ queryFilter: '', query: 'Harry%20Potter' })
+    if (location.pathname !== "/mybooks"){
+      updateSearchParams({ queryFilter: '', query: 'Harry%20Potter' })
+    }
   }, [])
 
   const performSearch = async (
@@ -65,7 +70,6 @@ export const BookSearchProvider = ({ children }) => {
         setControlButton1(hasMorePage1)
         setControlButton2(hasMorePage2)
 
-        console.log('🔥 Livros encontrados (grátis):', booksCurrent)
       } catch (err) {
         setError(err.message)
         console.error('Erro no modo isFree:', err.message)
@@ -75,8 +79,6 @@ export const BookSearchProvider = ({ children }) => {
 
       return
     }
-
-    console.log('index: ', index)
 
     setIsLoading(true)
     setError(null)
@@ -104,7 +106,6 @@ export const BookSearchProvider = ({ children }) => {
       let adjustedData = data
 
       if (totalItemsFromNextPage > 0 && totalItemsFromNextPage < 41) {
-        console.log('🔥 Refazendo busca com dados finais faltantes')
         adjustedData = await APIBooks(
           queryFilter,
           query,
@@ -119,7 +120,6 @@ export const BookSearchProvider = ({ children }) => {
       setControlButton1(remainingNext1 > 0)
       setControlButton2(remainingNext2 > 0)
 
-      console.log('✅ Livros encontrados:', adjustedData.items)
     } catch (err) {
       setError(err.message)
       console.error('Erro no modo normal:', err.message)

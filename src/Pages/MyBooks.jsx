@@ -10,13 +10,11 @@ const MyBooks = () => {
     <Layout>
       <BookSearchProvider>
         <BookFilterProvider>
-          <BooksMain freeButton={false} >
-            <MyBooksMain />
-          </BooksMain>
+          <MyBooksMain />
         </BookFilterProvider>
       </BookSearchProvider>
     </Layout>
   )
 }
 
-export default MyBooks;
+export default MyBooks

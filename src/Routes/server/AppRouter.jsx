@@ -5,7 +5,7 @@ import MyBooks from "../../Pages/MyBooks";
 import Login from "../../Pages/Login";
 import Register from "../../Pages/Register";
 import { AuthProvider } from "../../Context/AuthProvider";
-import BookInfo from "../../Components/Books/BookInfo";
+import BookID from "../../Pages/BookID";
 
 export default function AppRouter() {
   return (
@@ -15,7 +15,7 @@ export default function AppRouter() {
           <Route path="/mybooks" element={<MyBooks />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/book/:id" element={<BookInfo />} />
+          <Route path="/book/:id" element={<BookID />} />
         </Routes>
     </AuthProvider>
   );

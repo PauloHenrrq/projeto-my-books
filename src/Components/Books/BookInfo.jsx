@@ -11,7 +11,7 @@ export default function BookInfo () {
   const [erroMessage, setErroMessage] = useState(null)
 
   useEffect(() => {
-    console.log(book?.accessInfo)
+    (book?.accessInfo)
   }, [book])
 
   useEffect(() => {
@@ -20,7 +20,6 @@ export default function BookInfo () {
         setLoading(true)
         const result = await APIBooksId(id)
         setBook(result)
-        console.log('carregando volume...?', result) // teste
       } catch (erro) {
         console.error('Erro ao buscar livro:', erro)
         setErroMessage(erro.message)
@@ -32,7 +31,22 @@ export default function BookInfo () {
     fetchBook()
   }, [id])
 
-  if (loading) return <p>Carregando...</p>
+  if (loading) {
+    return (
+      <h1 className='title-h1 text-gray-800 font-semibold flex justify-center items-end mt-30 mb-100'>
+        Carregando&nbsp;
+        {Array.from({ length: 3 }).map((_, index) => (
+          <span
+            key={index}
+            className='upDown'
+            style={{ animationDelay: `${index * 0.15}s` }}
+          >
+            .
+          </span>
+        ))}
+      </h1>
+    )
+  }
 
   if (erroMessage) {
     return (

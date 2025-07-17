@@ -35,7 +35,7 @@ const SearchBar = () => {
         break
     }
     if (queryApi.length > 0) {
-      console.log(
+      (
         'pesquisando  ' + queryApi + ' filterOption:' + queryFilterApi
       ) // teste
       updateSearchParams({ queryFilter: queryFilterApi, query: queryApi, index: 0 })
