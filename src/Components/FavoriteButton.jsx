@@ -32,11 +32,11 @@ const FavoriteButton = ({ id, button = false }) => {
     <span onClick={toggleFavorite}>
       {button ? (
         !isFav ? (
-          <button className='font-bold bg-blue-600 py-2.5 px-3 rounded text-white shadow-[2px_2px_5px_gray] hover:bg-blue-700 transition-all duration-200 cursor-pointer whitespace-nowrap'>
+          <button className='font-bold bg-blue-600 py-2.5 px-3 rounded-2xl text-white  hover:bg-blue-700 transition-all duration-200 cursor-pointer whitespace-nowrap'>
             Favoritar
           </button>
         ) : (
-          <button className='font-bold bg-blue-400 py-2.5 px-3 rounded text-white shadow-[2px_2px_5px_gray] hover:bg-blue-500 transition-all duration-200 cursor-pointer whitespace-nowrap'>
+          <button className='font-bold bg-blue-400 py-2.5 px-3 rounded-2xl text-white  hover:bg-blue-500 transition-all duration-200 cursor-pointer whitespace-nowrap'>
             Desfavoritar
           </button>
         )
