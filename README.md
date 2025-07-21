@@ -1,6 +1,6 @@
 # MyBooks
 
-> Projeto desenvolvido para o módulo intermediário do **Projeto Capacita Brasil**
+> Projeto desenvolvido para o módulo intermediário do **Projeto Capacita Brasil - Full Stack**
 
 <p align="center">
   <img src="src/assets/Logo-MyBooks.jpeg" alt="Logo MyBooks" width="200" />
