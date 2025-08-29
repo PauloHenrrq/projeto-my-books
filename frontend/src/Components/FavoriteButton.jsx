@@ -26,7 +26,7 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
     }
 
     saveFavoritesToStorage(storage)
-    if (onChange) onChange()
+    if (onChange) onChange(id)
   }
 
   return (

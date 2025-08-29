@@ -6,7 +6,6 @@ import BooksMain from './BooksMain'
 import { Link } from 'react-router-dom'
 
 const MyBooksMain = () => {
-  const [allBooks, setAllBooks] = useState([])
   const [books, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
   const [index, setIndex] = useState(0)
@@ -32,7 +31,6 @@ const MyBooksMain = () => {
       const validBooks = results.filter(book => book && book.volumeInfo)
 
       setLoading(false)
-      setAllBooks(validBooks)
       setBooks(validBooks)
       setTotalItems(validBooks.length)
     }
@@ -40,9 +38,8 @@ const MyBooksMain = () => {
     fetchBooks()
   }, [])
 
-  const applyFavoritesFilter = () => {
-    const storage = getFavoritesFromStorage()
-    const newBooks = allBooks.filter(book => storage[book.id])
+  const applyFavoritesFilter = (bookId) => {
+    const newBooks = books.filter(book => book.id != bookId)
     setBooks(newBooks)
   }
 
