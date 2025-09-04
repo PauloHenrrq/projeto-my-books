@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import express from "express";
-
-const app = express()
-app.use(express.json())
-
-const PORT = process.env.PORT 
-app.listen(PORT, () => {
-    console.log("Servidor funcionando com sucesso")
-})
-=======
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -29,4 +18,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   logger.info(`Servidor rodando na porta ${PORT}`);
 });
->>>>>>> bd4f1f914ad2f7ada6aefc8e93d136e4ac4431f5
