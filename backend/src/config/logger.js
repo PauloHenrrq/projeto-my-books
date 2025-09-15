@@ -11,7 +11,7 @@ const logger = pino({
             colorize: true,
             ignore: "pid, hostname",
             translateTime: "yyyy-mm-dd HH:mm:ss",
-            messageFormart: "{req.method} {req.url} = {msg}",
+            messageFormat: "{req.method} {req.url} = {msg}",
           },
         }
       : undefined,
