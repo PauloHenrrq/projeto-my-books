@@ -46,4 +46,4 @@ const answers = {
     }
   }
   
-  export default answers;
+module.exports = answers

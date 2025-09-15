@@ -1,5 +1,6 @@
-import answers from '../../responses.js'
+const answers = require("../../responses.js")
 const favoriteService = require('./favorite.service.js')
+const logger = require("../../config/logger.js")
 
 exports.getAllFavoriteController = async (req, res) => {
   try {
