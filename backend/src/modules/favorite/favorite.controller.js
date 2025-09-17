@@ -14,7 +14,7 @@ exports.getAllFavoriteController = async (req, res) => {
       getFavorite
     )
   } catch (error) {
-    answers.internalServerError(
+    return answers.internalServerError(
       res,
       'Houve um erro ao resgatar os livros favoritos',
       error.message
