@@ -1,21 +1,17 @@
 require("dotenv").config();
-const prisma = require("../../config/prisma");
+const { prisma } = require("../../config/prisma");
+const answers = require("../../utils/responses");
 const { logger } = require("../../config/logger");
 const { hashPassword, comparePassword } = require("../../utils/passwordHash");
 const HttpError = require("../../utils/HttpError");
 const { generateToken } = require("../../utils/jwt");
-
 const JWT_KEY = process.env.JWT_SECRET;
-if (!JWT_KEY) {
-  logger.error("Chave JWT SECRET não foi carregada corretamente");
-  throw new Error("JWT SECRET não carregada!");
-}
 
 const register = async (userName, email, password) => {
   try {
     const isUser = await prisma.user.findUnique({ where: { email } });
     if (isUser) {
-      throw new HttpError("User already registered", 400);
+      throw new HttpError("User already registered", answers.badRequest);
     }
 
     hashedPassword = await hashPassword(password);
@@ -43,13 +39,13 @@ const login = async (email, password) => {
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      throw new HttpError("Invalid email or password", 400);
+      throw new HttpError("Invalid email or password", answers.badRequest);
     }
 
     const validPassword = await comparePassword(password, user.password);
 
     if (!validPassword) {
-      throw new HttpError("Invalid email or password", 400);
+      throw new HttpError("Invalid email or password", answers.badRequest);
     }
 
     const token = generateToken({ id: user.id, email: user.email }, JWT_KEY);
