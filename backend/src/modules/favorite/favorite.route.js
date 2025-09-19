@@ -3,11 +3,8 @@ const favoriteController = require("./favorite.controller")
 
 const router = express.Router()
 
-router.get('/', favoriteController.getAllFavoriteController)
-router.get('/:id', favoriteController.getByIdFavoriteController)
-router.post('/', favoriteController.toggleFavoriteController)
-router.delete('/', favoriteController.toggleFavoriteController)
+router.get('/favorite', favoriteController.getAllFavoriteController)
+router.post('/favorite', favoriteController.toggleFavoriteController)
+router.delete('/favorite/:userId/:googleId', favoriteController.toggleFavoriteController)
 
 module.exports = router
-
-// NOTE : Ajeitar a rota

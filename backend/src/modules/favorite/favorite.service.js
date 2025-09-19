@@ -1,41 +1,19 @@
 const prisma = require('../../config/prisma.js')
-const logger = require('../../config/logger.js')
+const { logger } = require('../../config/logger.js')
 
 const getAllFavorite = async () => {
   try {
     const favorites = await prisma.favorite.findMany()
-    logger.info('Livros favoritos carregados com sucesso', {
-      count: favorites.length
-    })
+
+    !!favorites
+      ? logger.warn('Nenhum Livro encontrado nos favoritos', favorites)
+      : logger.info('Livros favoritos carregados com sucesso', {
+          count: favorites.length
+        })
+
     return favorites
   } catch (error) {
     logger.error('Houve um erro ao carregar os livros favoritos', {
-      error: error.message
-    })
-    throw error
-  }
-}
-
-const getFavoriteByUserIdAndGoogleId = async (userId, googleId) => {
-  try {
-    const favorite = await prisma.favorite.findUnique({
-      where: {
-        userId_googleId: {
-          userId: userId,
-          googleId: googleId
-        }
-      }
-    })
-
-    if (!favorite) {
-      logger.warn(`Livro de ID ${googleId} não encontrado`)
-      return null
-    }
-
-    logger.info(`Livro de ID ${googleId} encontrado com sucesso.`)
-    return favorite
-  } catch (error) {
-    logger.error(`Houve um erro ao encontrar o Livro de ID ${googleId}`, {
       error: error.message
     })
     throw error
@@ -51,7 +29,7 @@ const createFavorite = async (userId, googleId) => {
 
     const favorite = await prisma.favorite.create({
       data: {
-        userId: userId,
+        userId: Number(userId),
         googleId: googleId
       }
     })
@@ -68,22 +46,25 @@ const createFavorite = async (userId, googleId) => {
   }
 }
 
-const deleteFavorite = async id => {
+const deleteFavorite = async (userId, googleId) => {
   const bookInfo = await prisma.favorite.findUnique({
     where: {
-      id: id
+      userId_googleId: {
+        userId: Number(userId),
+        googleId: googleId
+      }
     }
   })
 
   try {
     if (!bookInfo) {
-      logger.warn('Livro não está nos favoritos.')
+      logger.warn('Este Livro não está nos favoritos.')
       return null
     }
 
     const favorite = await prisma.favorite.delete({
       where: {
-        id: id
+        id: bookInfo.id
       }
     })
 

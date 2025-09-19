@@ -1,6 +1,6 @@
-const answers = require("../../responses.js")
+const answers = require('../../responses.js')
 const favoriteService = require('./favorite.service.js')
-const logger = require("../../config/logger.js")
+const { logger } = require('../../config/logger.js')
 
 exports.getAllFavoriteController = async (req, res) => {
   try {
@@ -8,11 +8,11 @@ exports.getAllFavoriteController = async (req, res) => {
 
     const getFavorite = await favoriteService.getAllFavorite()
 
-    return answers.success(
-      res,
-      'Todos os livros favoritos resgatados',
-      getFavorite
-    )
+    if (getFavorite.length === 0) {
+      return answers.notFound(res, 'Não há nenhum Livro nos favoritos')
+    }
+
+    return answers.success(res, 'Todos os livros favoritos resgatados', getFavorite)
   } catch (error) {
     return answers.internalServerError(
       res,
@@ -22,45 +22,29 @@ exports.getAllFavoriteController = async (req, res) => {
   }
 }
 
-exports.getByIdFavoriteController = async (req, res) => {
-  try {
-    const { id } = req.params
-
-    logger.info(`Resgatando Livro Favorito de ID ${id}...`)
-
-    const getByIdFavorite = await favoriteService.getFavoriteById(id)
-
-    if (!getByIdFavorite) {
-      return answers.notFound(res, 'Não existe um Livro com esse ID')
-    }
-
-    return answers.success(res, 'Livro encontrado com sucesso', getByIdFavorite)
-  } catch (error) {
-    return answers.internalServerError(
-      res,
-      'Houve um erro ao retornar o Livro de ID específico',
-      error.message
-    )
-  }
-}
-
 exports.toggleFavoriteController = async (req, res) => {
   try {
-    const { userId, googleId } = req.body
+    const userId = parseInt(req.params.userId || req.body.userId)
+    const googleId = String(req.params.googleId || req.body.googleId)
 
-    logger.info('Favoritando Livro...', {
-      UserID: userId,
-      googleID: googleId
-    })
+    if (!userId || !googleId) {
+      return answers.badRequest(res, 'É necessário informar userId e googleId.')
+    }
 
-    const checkFavorite = await favoriteService.getFavoriteByUserIdAndGoogleId(userId, googleId)
+    const checkFavorite = await favoriteService.getFavoriteByUserIdAndGoogleId(
+      userId,
+      googleId
+    )
 
-    if (!checkFavorite) {
+    if (!checkFavorite && userId === req.body.userId && googleId === req.body.googleId) {
       await favoriteService.createFavorite(userId, googleId)
       return answers.created(res, 'Livro adicionado aos favoritos')
-    } else {
-      await favoriteService.deleteFavorite(checkFavorite.id)
+    } else if (checkFavorite) {
+      await favoriteService.deleteFavorite(userId, googleId)
       return answers.success(res, 'Livro removido dos favoritos')
+    } else {
+      logger.warn('Este Livro não está nos favoritos')
+      answers.badRequest(res, 'Este Livro não está nos favoritos')
     }
   } catch (error) {
     return answers.internalServerError(
