@@ -4,22 +4,16 @@ const cors = require("cors");
 const { logger, httpLogger } = require("./config/logger");
 
 const { userRouter } = require("./modules/user/userRoutes");
+const { favoriteRouter } = require("./modules/favorite/favorite.route");
 
 const app = express();
-
-const favorite = require("../src/modules/favorite/favorite.route")
 
 app.use(cors());
 app.use(express.json());
 app.use(httpLogger);
 
-app.get("/", (req, res) => {
-  // logger.info("Rota principal acessada");
-  res.send("Olá, mundo!");
-});
-
-app.use("/api", userRouter);
-app.use("/api", favorite)
+app.use("/api/user", userRouter);
+app.use("/api/favorite", favoriteRouter)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
