@@ -9,14 +9,14 @@ const registerUserController = async (req, res) => {
     if (!email || !username || !password) {
       return answers.badRequest(
         res,
-        'Required fields: username, email and password'
+        'Campos necessários: nome, email e senha'
       )
     }
 
     if (password.length < 6) {
       return answers.badRequest(
         res,
-        'Password must be at least 6 characters long'
+        'A senha precisa ter pelo menos 6 caracteres'
       )
     }
 
@@ -39,7 +39,7 @@ const loginUserController = async (req, res) => {
     const { email, password } = req.body
 
     if (!email || !password) {
-      return answers.badRequest(res, 'Required fields: email and password')
+      return answers.badRequest(res, 'Campos necessários: email e senha')
     }
 
     const user = await userService.login(email, password)
