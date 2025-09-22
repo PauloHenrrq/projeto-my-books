@@ -1,13 +1,17 @@
-const express = require("express")
-const favoriteController = require("./favorite.controller")
+const express = require("express");
+const { authMiddleware } = require("../../middlewares/authMiddleware");
+const {
+  getAllFavoriteController,
+  createFavoriteController,
+  deleteFavoriteController,
+} = require("./favorite.controller");
 
-const router = express.Router()
+const favoriteRouter = express.Router();
 
-router.get('/', favoriteController.getAllFavoriteController)
-router.get('/:id', favoriteController.getByIdFavoriteController)
-router.post('/', favoriteController.toggleFavoriteController)
-router.delete('/', favoriteController.toggleFavoriteController)
+favoriteRouter.use(authMiddleware);
 
-module.exports = router
+favoriteRouter.get("/", getAllFavoriteController);
+favoriteRouter.post("/:googleId", createFavoriteController);
+favoriteRouter.delete("/:googleId", deleteFavoriteController);
 
-// NOTE : Ajeitar a rota
+module.exports = { favoriteRouter };

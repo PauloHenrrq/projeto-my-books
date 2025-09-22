@@ -1,71 +1,125 @@
-const answers = require("../../utils/responses.js");
 const favoriteService = require("./favorite.service.js");
-const logger = require("../../config/logger.js");
+const answers = require("../../utils/responses.js");
+const { logger } = require("../../config/logger.js");
 
-exports.getAllFavoriteController = async (req, res) => {
+const getAllFavoriteController = async (req, res) => {
   try {
     logger.info("Resgatando todos os Livros Favoritados...");
+    const userId = parseInt(req.user.id);
 
-    const getFavorite = await favoriteService.getAllFavorite();
+    if (!userId) {
+      return answers.badRequest(res, "Required fields: id");
+    }
+    const favorites = await favoriteService.getAllFavorite(userId);
 
-    return answers.success(res, "Todos os livros favoritos resgatados", getFavorite);
-  } catch (error) {
-    return answers.internalServerError(
-      res,
-      "Houve um erro ao resgatar os livros favoritos",
-      error.message
-    );
-  }
-};
-
-exports.getByIdFavoriteController = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    logger.info(`Resgatando Livro Favorito de ID ${id}...`);
-
-    const getByIdFavorite = await favoriteService.getFavoriteById(id);
-
-    if (!getByIdFavorite) {
-      return answers.notFound(res, "Não existe um Livro com esse ID");
+    if (favorites.length === 0) {
+      return answers.notFound(res, "Não há nenhum Livro nos favoritos", favorites);
     }
 
-    return answers.success(res, "Livro encontrado com sucesso", getByIdFavorite);
+    return answers.success(res, "Todos os livros favoritos resgatados", { favorites });
   } catch (error) {
+    logger.error(error);
     return answers.internalServerError(
       res,
-      "Houve um erro ao retornar o Livro de ID específico",
-      error.message
+      "Houve um erro ao resgatar os livros favoritos"
     );
   }
 };
 
-exports.toggleFavoriteController = async (req, res) => {
-  try {
-    const { userId, googleId } = req.body;
+// const toggleFavoriteController = async (req, res) => {
+//   try {
+//     const googleId = req.params.googleId;
+//     const userId = parseInt(req.user.id);
 
-    logger.info("Favoritando Livro...", {
-      UserID: userId,
+//     if (!userId || !googleId) {
+//       return answers.badRequest(res, "Required fields: id, googleId");
+//     }
+
+//     logger.info("Favoritando Livro...", {
+//       userID: userId,
+//       googleID: googleId,
+//     });
+
+//     const favorite = await favoriteService.getFavorite(userId, googleId);
+
+//     if (!favorite) {
+//       await favoriteService.createFavorite(userId, googleId);
+//       return answers.created(res, "Livro adicionado aos favoritos");
+//     } else {
+//       await favoriteService.deleteFavorite(userId, googleId);
+//       return answers.success(res, "Livro removido dos favoritos");
+//     }
+//   } catch (error) {
+//     logger.error(error);
+//     return answers.internalServerError(
+//       res,
+//       "Houve um erro ao realizar operação de favorito"
+//     );
+//   }
+// };
+
+const createFavoriteController = async (req, res) => {
+  try {
+    const googleId = req.params.googleId;
+    const userId = parseInt(req.user.id);
+
+    if (!userId || !googleId) {
+      return answers.badRequest(res, "Required fields: id, googleId");
+    }
+
+    logger.info("Tentando favoritar...", {
+      userID: userId,
       googleID: googleId,
     });
 
-    const checkFavorite = await favoriteService.getFavoriteByUserIdAndGoogleId(
-      userId,
-      googleId
-    );
+    const favorite = await favoriteService.getFavorite(userId, googleId);
 
-    if (!checkFavorite) {
-      await favoriteService.createFavorite(userId, googleId);
-      return answers.created(res, "Livro adicionado aos favoritos");
-    } else {
-      await favoriteService.deleteFavorite(checkFavorite.id);
-      return answers.success(res, "Livro removido dos favoritos");
+    if (favorite) {
+      return answers.badRequest(res, `Livro com googleId: ${googleId} já existe`);
     }
+    await favoriteService.createFavorite(userId, googleId);
+    return answers.created(res, "Livro adicionado com sucesso");
   } catch (error) {
+    logger.error(error);
     return answers.internalServerError(
       res,
-      "Houve um erro ao realizar operação de favorito",
-      error.message
+      "Houve um erro ao realizar operação de favorito"
     );
   }
+};
+
+const deleteFavoriteController = async (req, res) => {
+  try {
+    const googleId = req.params.googleId;
+    const userId = parseInt(req.user.id);
+
+    if (!userId || !googleId) {
+      return answers.badRequest(res, "Required fields: id, googleId");
+    }
+
+    logger.info("deletando Livro...", {
+      userID: userId,
+      googleID: googleId,
+    });
+
+    const favorite = await favoriteService.getFavorite(userId, googleId);
+
+    if (!favorite) {
+      return answers.badRequest(res, `Livro com googleId: ${googleId} não encontrado`);
+    }
+    await favoriteService.deleteFavorite(userId, googleId);
+    return answers.success(res, "Livro removido dos favoritos");
+  } catch (error) {
+    logger.error(error);
+    return answers.internalServerError(
+      res,
+      "Houve um erro ao realizar operação de favorito"
+    );
+  }
+};
+
+module.exports = {
+  getAllFavoriteController,
+  deleteFavoriteController,
+  createFavoriteController,
 };
