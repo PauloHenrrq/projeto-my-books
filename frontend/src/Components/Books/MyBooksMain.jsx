@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { getAllIdsFromStorage, getFavoritesFromStorage } from '../../utils/localStorageFavorites'
 import { APIBooksId } from '../../Routes/server/api'
 import BooksCard from './BooksCard'
 import BooksMain from './BooksMain'
@@ -12,31 +11,31 @@ const MyBooksMain = () => {
   const [maxResult, setMaxResult] = useState(20)
   const [totalItems, setTotalItems] = useState(0)
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const ids = getAllIdsFromStorage()
+  // useEffect(() => {
+  //   const fetchBooks = async () => {
+  //     const ids = getAllIdsFromStorage()
 
-      const promises = ids.map(async id => {
-        try {
-          const book = await APIBooksId(id)
-          return book
-        } catch (err) {
-          console.error(`Erro ao buscar livro com id ${id}:`, err)
-          return null
-        }
-      })
+  //     const promises = ids.map(async id => {
+  //       try {
+  //         const book = await APIBooksId(id)
+  //         return book
+  //       } catch (err) {
+  //         console.error(`Erro ao buscar livro com id ${id}:`, err)
+  //         return null
+  //       }
+  //     })
 
-      const results = await Promise.all(promises)
+  //     const results = await Promise.all(promises)
 
-      const validBooks = results.filter(book => book && book.volumeInfo)
+  //     const validBooks = results.filter(book => book && book.volumeInfo)
 
-      setLoading(false)
-      setBooks(validBooks)
-      setTotalItems(validBooks.length)
-    }
+  //     setLoading(false)
+  //     setBooks(validBooks)
+  //     setTotalItems(validBooks.length)
+  //   }
 
-    fetchBooks()
-  }, [])
+  //   fetchBooks()
+  // }, [])
 
   const applyFavoritesFilter = (bookId) => {
     const newBooks = books.filter(book => book.id != bookId)

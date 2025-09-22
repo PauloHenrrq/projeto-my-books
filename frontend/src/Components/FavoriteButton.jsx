@@ -5,12 +5,19 @@ import {
 } from '../utils/localStorageFavorites'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
+import { api } from '../Routes/server/api'
 
-const FavoriteButton = ({ id, button = false, onChange }) => {
+const FavoriteButton = async ({ id, button = false, onChange }) => {
+  const token = localStorage.getItem("authToken")
+
+  const response = token ? await api.get("/api/favorite") : null
+  const favorites = response.data.details
+  
   const [isFav, setIsFav] = useState(() => {
-    const storage = getFavoritesFromStorage()
+    
     return Boolean(storage[id])
   })
+
 
   function toggleFavorite (e) {
     e.stopPropagation()

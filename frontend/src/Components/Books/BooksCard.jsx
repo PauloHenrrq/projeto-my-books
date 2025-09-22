@@ -1,10 +1,6 @@
 // Componente filho para a geração de Card
 import React, { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  getFavoritesFromStorage,
-  saveFavoritesToStorage
-} from '../../utils/localStorageFavorites'
 import { BookSearchContext } from '../../Context/BookSearchContext/BookSearchContextDefinition'
 import { BookFilterContext } from '../../Context/BookFilterContext/BookFilterContextDefinition'
 import { StarIcon } from '@heroicons/react/24/solid'
