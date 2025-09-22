@@ -1,7 +1,7 @@
 import { React } from 'react'
 import './App.css'
 import { BrowserRouter } from 'react-router-dom'
-import AppRouter from './Routes/server/AppRouter';
+import AppRouter from './Routes/server/AppRouter'
 
 function App () {
   return (
@@ -11,4 +11,4 @@ function App () {
   )
 }
 
-export default App;
+export default App

@@ -12,16 +12,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = (email, password) => {
-    try {
-      loginStorage(email, password);
-      const updatedUser = getLoggedUser();
-      setUser(updatedUser);
-    } catch (erro) {
-      throw new Error(erro.message);
-    }
-  };
-
   const logout = () => {
     logoutStorage();
     setUser(null);
@@ -30,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   const isLogged = Boolean(user);
 
   return (
-    <AuthContext.Provider value={{ user, isLogged, login, logout }}>
+    <AuthContext.Provider value={{ user, isLogged, logout }}>
       {children}
     </AuthContext.Provider>
   );
