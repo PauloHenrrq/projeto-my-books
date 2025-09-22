@@ -4,9 +4,9 @@ const userService = require('./userService')
 
 const registerUserController = async (req, res) => {
   try {
-    const { userName, email, password } = req.body
+    const { username, email, password } = req.body
 
-    if (!email || !userName || !password) {
+    if (!email || !username || !password) {
       return answers.badRequest(
         res,
         'Required fields: username, email and password'
@@ -20,7 +20,7 @@ const registerUserController = async (req, res) => {
       )
     }
 
-    const user = await userService.register(userName, email, password)
+    const user = await userService.register(username, email, password)
 
     logger.info(user, 'User registered successfully')
     return answers.created(res, 'User registered successfully', user)

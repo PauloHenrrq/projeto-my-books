@@ -82,7 +82,6 @@ const deleteFavorite = async (userId, googleId) => {
 
 module.exports = {
   getAllFavorite,
-  getFavoriteByUserIdAndGoogleId,
   createFavorite,
   deleteFavorite
 }
