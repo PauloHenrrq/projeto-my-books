@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { useState } from 'react'
 
 import { useNavigate, Link } from 'react-router-dom'
@@ -20,7 +20,11 @@ const LoginForm = () => {
   const navigate = useNavigate()
   const onSubmit = async () => {
     try {
-      await api.post('/api/login', formData)
+      const response = await api.post('/api/login', formData)
+      const token = response.data.details
+
+      localStorage.setItem('authToken', token)
+
       setAuthError(null)
       navigate('/')
     } catch (error) {
