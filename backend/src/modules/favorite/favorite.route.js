@@ -1,6 +1,7 @@
 const express = require("express");
 const { authMiddleware } = require("../../middlewares/authMiddleware");
 const {
+  getByIdController,
   getAllFavoriteController,
   createFavoriteController,
   deleteFavoriteController,
@@ -11,6 +12,7 @@ const favoriteRouter = express.Router();
 favoriteRouter.use(authMiddleware);
 
 favoriteRouter.get("/", getAllFavoriteController);
+favoriteRouter.get("/:id", getByIdController);
 favoriteRouter.post("/:googleId", createFavoriteController);
 favoriteRouter.delete("/:googleId", deleteFavoriteController);
 

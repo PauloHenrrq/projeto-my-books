@@ -23,7 +23,9 @@ const getAllFavorite = async (userId) => {
   }
 };
 
-const getFavorite = async (userId, googleId) => {
+const getFavorite = async (googleId) => {
+  const userId = parseInt(req.user.id);
+
   try {
     const favorite = await prisma.favorite.findUnique({
       where: {

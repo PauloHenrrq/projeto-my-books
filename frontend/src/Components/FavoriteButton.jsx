@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import {
   getFavoritesFromStorage,
   saveFavoritesToStorage
@@ -7,32 +7,48 @@ import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
 import { api } from '../Routes/server/api'
 
-const FavoriteButton = async ({ id, button = false, onChange }) => {
-  const token = localStorage.getItem("authToken")
+const FavoriteButton = ({ id, button = false, onChange }) => {
+  const [isFav, setIsFav] = useState(false)
 
-  const response = token ? await api.get("/api/favorite") : null
-  const favorites = response.data.details
-  
-  const [isFav, setIsFav] = useState(() => {
-    
-    return Boolean(storage[id])
-  })
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const token = localStorage.getItem('authToken')
+      if (!token) {
+        return
+      }
 
+      try {
+        const response = await api.get('/api/favorite')
+        const favorites = response.data.details
 
-  function toggleFavorite (e) {
+        const favIds = favorites.map(f => f.googleId)
+        setIsFav(favIds.includes(id))
+      } catch (error) {
+        console.error('Erro ao buscar favoritos:', error.message)
+      }
+    }
+
+    fetchFavorites()
+  }, [id])
+
+  async function toggleFavorite (e) {
     e.stopPropagation()
 
-    const storage = getFavoritesFromStorage()
-
-    if (storage[id]) {
-      delete storage[id]
+    try {
+      if (isFav) {
+        await api.delete("/api/favorite/")
+      }
+    } catch (error) {
+      
+    }
+    if (favorites[id]) {
+      delete favorites[id]
       setIsFav(false)
     } else {
-      storage[id] = true
+      favorites[id] = true
       setIsFav(true)
     }
 
-    saveFavoritesToStorage(storage)
     if (onChange) onChange(id)
   }
 

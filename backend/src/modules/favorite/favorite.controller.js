@@ -8,7 +8,7 @@ const getAllFavoriteController = async (req, res) => {
     const userId = parseInt(req.user.id);
 
     if (!userId) {
-      return answers.badRequest(res, "Required fields: id");
+      return answers.badRequest(res, "Necessário realizar login");
     }
     const favorites = await favoriteService.getAllFavorite(userId);
 
@@ -25,6 +25,30 @@ const getAllFavoriteController = async (req, res) => {
     );
   }
 };
+
+const getByIdController = async (req, res) => {
+  try {
+    const { googleId } = req.params 
+
+    logger.info("Resgatando Livro Favorito por ID...")
+    const userId = parseInt(req.user.id)
+
+    if (!userId) {
+      return answers.badRequest(res, "Necessário realizar login");
+    }
+
+    const favorite = await favoriteService.getFavorite(googleId)
+
+    if (!favorite) {
+      return answers.notFound("Esse livro não está nos favoritos", favorite)
+    }
+
+    return answers.success("Livro retornado com êxito")
+  } catch (error) {
+    logger.error(error);
+    return answers.internalServerError(res, "Houve um erro ao resgatar o Livro dos Favoritos")
+  }
+}
 
 // const toggleFavoriteController = async (req, res) => {
 //   try {
@@ -119,6 +143,7 @@ const deleteFavoriteController = async (req, res) => {
 };
 
 module.exports = {
+  getByIdController,
   getAllFavoriteController,
   deleteFavoriteController,
   createFavoriteController,
