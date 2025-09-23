@@ -20,7 +20,7 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
         const favIds = favorites.map(f => f.googleId)
         setIsFav(favIds.includes(id))
       } catch (error) {
-        console.error('Erro ao buscar favoritos:', error.message)
+        console.error('Erro ao buscar favoritos')
       }
     }
 
@@ -35,6 +35,7 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
         await api.delete(`/api/favorite/${id}`)
         setIsFav(false)
       } else {
+        console.log(id)
         await api.post(`api/favorite/${id}`, {
           googleId: id
         })

@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState } from 'react'
-
 import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { api } from '../Routes/server/api'
@@ -20,8 +19,9 @@ const LoginForm = () => {
   const navigate = useNavigate()
   const onSubmit = async () => {
     try {
-      const response = await api.post('/api/login', formData)
-      const token = response.data.details
+      const response = await api.post('/api/user/login', formData)
+      console.log(response)
+      const token = response.data.details.user.token
 
       localStorage.setItem('authToken', token)
 

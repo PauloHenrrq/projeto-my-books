@@ -13,7 +13,7 @@ import { AuthContext } from '../Context/AuthContext'
 
 export default function Header () {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
-  const { user, logout , isLogged} = useContext(AuthContext)
+  const { user, logout, isLogged } = useContext(AuthContext)
   const navigate = useNavigate()
 
   return (

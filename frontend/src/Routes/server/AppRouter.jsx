@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from '../../Context/AuthProvider'
 
 import Books from '../../Pages/Books'
 import MyBooks from '../../Pages/MyBooks'
@@ -8,12 +9,14 @@ import BookID from '../../Pages/BookID'
 
 export default function AppRouter () {
   return (
-    <Routes>
-      <Route path='/' element={<Books />} />
-      <Route path='/mybooks' element={<MyBooks />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
-      <Route path='/book/:id' element={<BookID />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path='/' element={<Books />} />
+        <Route path='/mybooks' element={<MyBooks />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/book/:id' element={<BookID />} />
+      </Routes>
+    </AuthProvider>
   )
 }

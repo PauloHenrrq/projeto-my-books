@@ -17,8 +17,8 @@ const RegisterForm = () => {
   const navigate = useNavigate()
   const onSubmit = async data => {
     try {
-      await api.post('/api/register', {
-        username: data.username,
+      await api.post('/api/user/register', {
+        userName: data.username,
         email: data.email,
         password: data.password
       })
