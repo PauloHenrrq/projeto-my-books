@@ -26,38 +26,6 @@ const getAllFavoriteController = async (req, res) => {
   }
 };
 
-// const toggleFavoriteController = async (req, res) => {
-//   try {
-//     const googleId = req.params.googleId;
-//     const userId = parseInt(req.user.id);
-
-//     if (!userId || !googleId) {
-//       return answers.badRequest(res, "Required fields: id, googleId");
-//     }
-
-//     logger.info("Favoritando Livro...", {
-//       userID: userId,
-//       googleID: googleId,
-//     });
-
-//     const favorite = await favoriteService.getFavorite(userId, googleId);
-
-//     if (!favorite) {
-//       await favoriteService.createFavorite(userId, googleId);
-//       return answers.created(res, "Livro adicionado aos favoritos");
-//     } else {
-//       await favoriteService.deleteFavorite(userId, googleId);
-//       return answers.success(res, "Livro removido dos favoritos");
-//     }
-//   } catch (error) {
-//     logger.error(error);
-//     return answers.internalServerError(
-//       res,
-//       "Houve um erro ao realizar operação de favorito"
-//     );
-//   }
-// };
-
 const createFavoriteController = async (req, res) => {
   try {
     const googleId = req.params.googleId;
