@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { APIBooksId } from '../../Routes/server/api'
+import { api, APIBooksId } from '../../Routes/server/api'
 import BooksCard from './BooksCard'
 import BooksMain from './BooksMain'
 import { Link } from 'react-router-dom'
@@ -10,34 +10,51 @@ const MyBooksMain = () => {
   const [index, setIndex] = useState(0)
   const [maxResult, setMaxResult] = useState(20)
   const [totalItems, setTotalItems] = useState(0)
+  const token = localStorage.getItem('authToken')
 
-  // useEffect(() => {
-  //   const fetchBooks = async () => {
-  //     const ids = getAllIdsFromStorage()
+  if (!token) {
+    return (
+      <main className='flex-grow flex flex-col justify-center items-center'>
+        <h1 className='title-h1 text-gray-800 font-semibold text-center mb-5'>
+          Realize o Login para favoritar os Livros
+        </h1>
+        <Link
+          to='/login'
+          className='text-lg font-bold bg-blue-600 py-2 px-5 rounded-xl text-white hover:bg-blue-700 transition-all duration-200 cursor-pointer'
+        >
+          Login
+        </Link>
+      </main>
+    )
+  }
 
-  //     const promises = ids.map(async id => {
-  //       try {
-  //         const book = await APIBooksId(id)
-  //         return book
-  //       } catch (err) {
-  //         console.error(`Erro ao buscar livro com id ${id}:`, err)
-  //         return null
-  //       }
-  //     })
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const ids = await api.get('/api/favorite')
 
-  //     const results = await Promise.all(promises)
+      const promises = ids.map(async id => {
+        try {
+          const book = await APIBooksId(id)
+          return book
+        } catch (err) {
+          console.error(`Erro ao buscar livro com id ${id}:`, err)
+          return null
+        }
+      })
 
-  //     const validBooks = results.filter(book => book && book.volumeInfo)
+      const results = await Promise.all(promises)
 
-  //     setLoading(false)
-  //     setBooks(validBooks)
-  //     setTotalItems(validBooks.length)
-  //   }
+      const validBooks = results.filter(book => book && book.volumeInfo)
 
-  //   fetchBooks()
-  // }, [])
+      setLoading(false)
+      setBooks(validBooks)
+      setTotalItems(validBooks.length)
+    }
 
-  const applyFavoritesFilter = (bookId) => {
+    fetchBooks()
+  }, [])
+
+  const applyFavoritesFilter = bookId => {
     const newBooks = books.filter(book => book.id != bookId)
     setBooks(newBooks)
   }
@@ -87,7 +104,10 @@ const MyBooksMain = () => {
       onUpdateIndex={setIndex}
       onUpdateMaxResult={setMaxResult}
     >
-      <BooksCard externalBooks={paginatedBooks} changeFavorites={applyFavoritesFilter} />
+      <BooksCard
+        externalBooks={paginatedBooks}
+        changeFavorites={applyFavoritesFilter}
+      />
     </BooksMain>
   )
 }

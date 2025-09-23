@@ -1,8 +1,4 @@
 import { React, useEffect, useState } from 'react'
-import {
-  getFavoritesFromStorage,
-  saveFavoritesToStorage
-} from '../utils/localStorageFavorites'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
 import { api } from '../Routes/server/api'
@@ -36,20 +32,19 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
 
     try {
       if (isFav) {
-        await api.delete("/api/favorite/")
+        await api.delete(`/api/favorite/${id}`)
+        setIsFav(false)
+      } else {
+        await api.post(`api/favorite/${id}`, {
+          googleId: id
+        })
+        setIsFav(true)
       }
-    } catch (error) {
-      
-    }
-    if (favorites[id]) {
-      delete favorites[id]
-      setIsFav(false)
-    } else {
-      favorites[id] = true
-      setIsFav(true)
-    }
 
-    if (onChange) onChange(id)
+      if (onChange) onChange(id)
+    } catch (error) {
+      console.error('Erro ao atualizar favorito:', error.message)
+    }
   }
 
   return (
