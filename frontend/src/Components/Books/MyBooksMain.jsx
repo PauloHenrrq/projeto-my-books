@@ -10,6 +10,8 @@ const MyBooksMain = () => {
   const [index, setIndex] = useState(0)
   const [maxResult, setMaxResult] = useState(20)
   const [totalItems, setTotalItems] = useState(0)
+  const [error, setError] = useState(false)
+  const [reload, setReload] = useState(false)
   const token = localStorage.getItem('authToken')
 
   if (!token) {
@@ -30,29 +32,36 @@ const MyBooksMain = () => {
 
   useEffect(() => {
     const fetchBooks = async () => {
-      const ids = await api.get('/api/favorite')
+      try {
+        const favorites = await api.get('/api/favorite')
 
-      const promises = ids.map(async id => {
-        try {
-          const book = await APIBooksId(id)
-          return book
-        } catch (err) {
-          console.error(`Erro ao buscar livro com id ${id}:`, err)
-          return null
-        }
-      })
+        const promises = favorites.map(async id => {
+          try {
+            const book = await APIBooksId(id)
+            return book
+          } catch (error) {
+            console.error(`Erro ao buscar livros favoritos`, error)
+            return null
+          }
+        })
 
-      const results = await Promise.all(promises)
+        const results = await Promise.all(promises)
 
-      const validBooks = results.filter(book => book && book.volumeInfo)
+        const validBooks = results.filter(book => book && book.volumeInfo)
 
-      setLoading(false)
-      setBooks(validBooks)
-      setTotalItems(validBooks.length)
+        setBooks(validBooks)
+        setTotalItems(validBooks.length)
+      } catch (error) {
+        setError(true)
+        console.error('Erro ao buscar os livros favoritos', error.message)
+      } finally {
+        setLoading(false)
+        setReload(false)
+      }
     }
 
     fetchBooks()
-  }, [])
+  }, [reload])
 
   const applyFavoritesFilter = bookId => {
     const newBooks = books.filter(book => book.id != bookId)
@@ -60,6 +69,19 @@ const MyBooksMain = () => {
   }
 
   const paginatedBooks = books.slice(index * maxResult, (index + 1) * maxResult)
+
+  if (error) {
+    return (
+      <div className=''>
+        <h1 className='title-h1 text-red-600 font-semibold flex justify-center items-end mt-20 mb-100'>
+          Não foi possível carregar os Livros
+        </h1>
+        <button className='w-fit mx-auto text-lg font-bold bg-blue-600 py-2 px-5 rounded-xl text-white hover:bg-blue-700 transition-all duration-200 cursor-pointer' onClick={setReload(true)} >
+            Recarregar
+        </button>
+      </div>
+    )
+  }
 
   if (loading) {
     return (

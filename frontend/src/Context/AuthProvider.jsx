@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { loginStorage, logoutStorage, getLoggedUser } from "../utils/localStorageLogin";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = getLoggedUser();
-    if (storedUser) {
-      setUser(storedUser);
+    const user = localStorage.getItem("authToken") || false
+    if (user) {
+      setUser(user);
     }
   }, []);
 
   const logout = () => {
-    logoutStorage();
+    localStorage.removeItem("authToken")
     setUser(null);
   };
 
