@@ -12,7 +12,6 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
   useEffect(() => {
     if (!token) {
       setCheckToken(false)
-      return
     } else {
       setCheckToken(true)
     }
@@ -30,11 +29,13 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
         const favIds = favorites.map(f => String(f.googleId))
         setIsFav(favIds.includes(String(id)))
         setCheckToken(true)
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     fetchFavorites()
-  }, [])
+  }, [checkToken])
 
   async function toggleFavorite (e) {
     e.stopPropagation()
