@@ -83,7 +83,7 @@ export default function BookInfo () {
             alt={`imagem do livro ${title}`}
             className='flex m-auto min-w-40 my-2 rounded'
           />
-          <div className='flex gap-5'>
+          <div className='flex justify-center'>
             {book?.accessInfo.viewability === 'PARTIAL' ||
             book?.accessInfo.viewability === 'ALL_PAGES' ? (
               <a

@@ -5,11 +5,11 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const user = localStorage.getItem("authToken") || false
+    const user = localStorage.getItem("authToken")
     if (user) {
-      setUser(user);
+      setUser(true);
     }
-  }, []);
+  }, [user]);
 
   const logout = () => {
     localStorage.removeItem("authToken")
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   const isLogged = Boolean(user);
 
   return (
-    <AuthContext.Provider value={{ user, isLogged, logout }}>
+    <AuthContext.Provider value={{ user, setUser, isLogged, logout }}>
       {children}
     </AuthContext.Provider>
   );

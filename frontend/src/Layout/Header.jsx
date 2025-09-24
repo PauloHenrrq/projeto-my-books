@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Bars3Icon, XMarkIcon, BookOpenIcon} from '@heroicons/react/24/solid'
 import {
   HomeIcon,
@@ -58,11 +58,6 @@ export default function Header () {
           </div>
 
           <div className="p-4 space-y-4 flex flex-col items-start">
-            {isLogged && (
-              <h2 className="text-[var(--titulo)] font-semibold text-xl mb-5">
-                Olá, {user.username}
-              </h2>
-            )}
             <div
               className="flex flex-row items-center gap-2 text-[var(--azul-vivido)]"
               onClick={() => {
@@ -154,17 +149,14 @@ export default function Header () {
         <div className="hidden md:flex space-x-4">
           {isLogged ? (
             <>
-              <div className="flex flex-row items-center gap-2 bg-[var(--azul-vivido)] text-[var(--cinza-claro)] px-4 py-2 rounded-3xl ">
-                <UserIcon className="w-5 h-5" />
-                <p className="cursor-default">{user.username}</p>
-              </div>
-              <div
+              <Link
+                to="/login"
                 className="flex flex-row items-center gap-2 bg-[var(--azul-vivido)]  hover:bg-[var(--azul-claro)] text-[var(--cinza-claro)] px-4 py-2 rounded-3xl cursor-pointer"
                 onClick={() => logout()}
               >
                 <ArrowLeftEndOnRectangleIcon className="w-4 h-4" />
                 <p className="font-medium">Sair</p>
-              </div>
+              </Link>
             </>
           ) : (
             <>

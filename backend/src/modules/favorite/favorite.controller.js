@@ -13,7 +13,7 @@ const getAllFavoriteController = async (req, res) => {
     const favorites = await favoriteService.getAllFavorite(userId);
 
     if (favorites.length === 0) {
-      return answers.notFound(res, "Não há nenhum Livro nos favoritos", favorites);
+      return answers.success(res, "Não há nenhum Livro nos favoritos");
     }
 
     return answers.success(res, "Todos os livros favoritos resgatados", { favorites });
@@ -87,7 +87,6 @@ const deleteFavoriteController = async (req, res) => {
 };
 
 module.exports = {
-  getByIdController,
   getAllFavoriteController,
   deleteFavoriteController,
   createFavoriteController,

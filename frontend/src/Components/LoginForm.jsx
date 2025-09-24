@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { api } from '../Routes/server/api'
+import { AuthContext } from '../Context/AuthContext'
 
 const LoginForm = () => {
   const [authError, setAuthError] = useState(null)
+  const { setUser } = useContext(AuthContext)
   const {
     register,
     handleSubmit,
@@ -20,13 +22,13 @@ const LoginForm = () => {
   const onSubmit = async () => {
     try {
       const response = await api.post('/api/user/login', formData)
-      console.log(response)
       const token = response.data.details.user.token
 
       localStorage.setItem('authToken', token)
 
       setAuthError(null)
       navigate('/')
+      setUser(true)
     } catch (error) {
       setAuthError(error.response.data.message || 'Erro ao fazer Login')
     }
@@ -38,7 +40,6 @@ const LoginForm = () => {
       ...formData,
       [name]: value
     })
-    console.log(formData)
   }
 
   return (
@@ -56,7 +57,9 @@ const LoginForm = () => {
           className='bg-[var(--cinza-claro)] p-8 rounded-2xl space-y-4 w-full max-w-72 md:max-w-md'
         >
           <div>
-            <label className='block text-sm font-medium text-[var(--texto)]'>Email</label>
+            <label className='block text-sm font-medium text-[var(--texto)]'>
+              Email
+            </label>
             <input
               type='email'
               name='email'
@@ -74,12 +77,16 @@ const LoginForm = () => {
               onChange={handleChange}
             />
             {errors.email && (
-              <p className='text-red-500 text-sm mt-1'>{errors.email.message}</p>
+              <p className='text-red-500 text-sm mt-1'>
+                {errors.email.message}
+              </p>
             )}
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-[var(--texto)]'>Senha</label>
+            <label className='block text-sm font-medium text-[var(--texto)]'>
+              Senha
+            </label>
             <input
               type='password'
               name='password'
@@ -93,7 +100,9 @@ const LoginForm = () => {
               onChange={handleChange}
             />
             {errors.password && (
-              <p className='text-red-500 text-sm mt-1'>{errors.password.message}</p>
+              <p className='text-red-500 text-sm mt-1'>
+                {errors.password.message}
+              </p>
             )}
           </div>
           {authError && (
@@ -101,10 +110,13 @@ const LoginForm = () => {
           )}
           <button
             type='submit'
-            className='w-full bg-[var(--azul-vivido)] text-white py-2 rounded-lg hover:bg-[var(--azul-escuro)] font-semibold cursor-pointer'
+            className='w-full bg-[var(--azul-vivido)] text-white py-2 rounded-lg hover:bg-[var(--azul-escuro)] font-semibold cursor-pointer mb-1'
           >
             Entrar
           </button>
+          <Link to='/' className='text-sm'>
+            <p className='flex justify-center w-full text-zinc-700 hover:text-black'>Continuar sem Login</p>
+          </Link>
         </form>
         <Link
           to={'/register'}

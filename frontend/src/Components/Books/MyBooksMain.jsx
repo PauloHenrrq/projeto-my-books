@@ -18,7 +18,7 @@ const MyBooksMain = () => {
     return (
       <main className='flex-grow flex flex-col justify-center items-center'>
         <h1 className='title-h1 text-gray-800 font-semibold text-center mb-5'>
-          Realize o Login para favoritar os Livros
+          Realize o Login para ver seus livros favoritos
         </h1>
         <Link
           to='/login'
@@ -33,11 +33,12 @@ const MyBooksMain = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const favorites = await api.get('/api/favorite')
+        const response = await api.get('/api/favorite')
+        const favorites = response.data.details.favorites
 
-        const promises = favorites.map(async id => {
+        const promises = favorites.map(async fav => {
           try {
-            const book = await APIBooksId(id)
+            const book = await APIBooksId(fav.googleId)
             return book
           } catch (error) {
             console.error(`Erro ao buscar livros favoritos`, error)
@@ -52,8 +53,7 @@ const MyBooksMain = () => {
         setBooks(validBooks)
         setTotalItems(validBooks.length)
       } catch (error) {
-        setError(true)
-        console.error('Erro ao buscar os livros favoritos', error.message)
+        return
       } finally {
         setLoading(false)
         setReload(false)
@@ -76,8 +76,11 @@ const MyBooksMain = () => {
         <h1 className='title-h1 text-red-600 font-semibold flex justify-center items-end mt-20 mb-100'>
           Não foi possível carregar os Livros
         </h1>
-        <button className='w-fit mx-auto text-lg font-bold bg-blue-600 py-2 px-5 rounded-xl text-white hover:bg-blue-700 transition-all duration-200 cursor-pointer' onClick={setReload(true)} >
-            Recarregar
+        <button
+          className='w-fit mx-auto text-lg font-bold bg-blue-600 py-2 px-5 rounded-xl text-white hover:bg-blue-700 transition-all duration-200 cursor-pointer'
+          onClick={setReload(true)}
+        >
+          Recarregar
         </button>
       </div>
     )

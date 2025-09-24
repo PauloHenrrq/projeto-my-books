@@ -12,7 +12,6 @@ const favoriteRouter = express.Router();
 favoriteRouter.use(authMiddleware);
 
 favoriteRouter.get("/", getAllFavoriteController);
-favoriteRouter.get("/:id", getByIdController);
 favoriteRouter.post("/:googleId", createFavoriteController);
 favoriteRouter.delete("/:googleId", deleteFavoriteController);
 
