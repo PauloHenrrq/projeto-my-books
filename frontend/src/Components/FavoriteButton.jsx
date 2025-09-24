@@ -19,22 +19,21 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      if (!checkToken) {
-        return
-      }
-      try {
-        const response = await api.get('/api/favorite')
-        const favorites = response.data.details.favorites
+      if (checkToken) {
+        try {
+          const response = await api.get('/api/favorite')
+          const favorites = response.data.details.favorites
 
-        const favIds = favorites.map(f => String(f.googleId))
-        setIsFav(favIds.includes(String(id)))
-        setCheckToken(true)
-      } catch (error) {
-        console.error(error)
+          const favIds = favorites.map(f => String(f.googleId))
+          setIsFav(favIds.includes(String(id)))
+          setCheckToken(true)
+        } catch (error) {
+          console.error(error)
+        }
       }
+
+      fetchFavorites()
     }
-
-    fetchFavorites()
   }, [checkToken])
 
   async function toggleFavorite (e) {
