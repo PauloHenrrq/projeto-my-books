@@ -16,15 +16,15 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      const favoriteLocal = async () => {
+      const fetchFavoriteLocal = async () => {
         const response = await api.get('/api/favorite')
-        const favorites = response.data.details.favorites
-
-        setFavoriteLocal(favorites)
+        const favoriteObj = response.data.details.favorites;
+        const favorites = favoriteObj.map((fav) => fav.googleId);
+        setFavoriteLocal(favorites);
         setFavoriteLoading(false)
       }
 
-      favoriteLocal()
+      fetchFavoriteLocal()
     }
   }, [user])
 
