@@ -6,8 +6,12 @@ import MyBooks from '../../Pages/MyBooks'
 import Login from '../../Pages/Login'
 import Register from '../../Pages/Register'
 import BookID from '../../Pages/BookID'
+import { useNavigate } from 'react-router-dom'
+import { setNavigate } from '../../../navigation' 
 
 export default function AppRouter () {
+  const nav = useNavigate();
+    setNavigate(nav);
   return (
     <AuthProvider>
       <Routes>

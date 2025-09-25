@@ -43,6 +43,7 @@ const createFavoriteController = async (req, res) => {
     const favorite = await favoriteService.getFavorite(userId, googleId);
 
     if (favorite) {
+      logger.warn(`Livro com googleId: ${googleId} já existe`);
       return answers.badRequest(res, `Livro com googleId: ${googleId} já existe`);
     }
     await favoriteService.createFavorite(userId, googleId);
@@ -73,6 +74,7 @@ const deleteFavoriteController = async (req, res) => {
     const favorite = await favoriteService.getFavorite(userId, googleId);
 
     if (!favorite) {
+      logger.warn(`Livro com googleId: ${googleId} não encontrado`);
       return answers.badRequest(res, `Livro com googleId: ${googleId} não encontrado`);
     }
     await favoriteService.deleteFavorite(userId, googleId);
