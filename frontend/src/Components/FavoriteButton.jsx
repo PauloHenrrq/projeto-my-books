@@ -1,40 +1,39 @@
-import { React, useEffect, useState } from 'react'
+import { React, useContext, useEffect, useState } from 'react'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline'
+import { AuthContext } from '../Context/AuthContext'
 import { api } from '../Routes/server/api'
 
-const FavoriteButton = ({ id, button = false, onChange }) => {
+const FavoriteButton = ({ id, button = false, onChange, changeLocalFav }) => {
   const [isFav, setIsFav] = useState(false)
-  const [checkToken, setCheckToken] = useState(false)
-
-  const token = localStorage.getItem('authToken')
-
-  useEffect(() => {
-    if (!token) {
-      setCheckToken(false)
-    } else {
-      setCheckToken(true)
-    }
-  }, [])
+  const { user, isLogged, favoriteLocal, setFavoriteLocal } =
+    useContext(AuthContext)
 
   useEffect(() => {
-    const fetchFavorites = async () => {
-      if (checkToken) {
+    if (user) {
+      const fetchFavorites = async () => {
         try {
-          const response = await api.get('/api/favorite')
-          const favorites = response.data.details.favorites
-
-          const favIds = favorites.map(f => String(f.googleId))
+          const favIds = favoriteLocal.map(f => String(f.googleId))
           setIsFav(favIds.includes(String(id)))
-          setCheckToken(true)
         } catch (error) {
           console.error(error)
         }
       }
-
       fetchFavorites()
     }
-  }, [checkToken])
+  }, [id, user, favoriteLocal])
+
+  async function toggleFavorite (e) {
+    e.stopPropagation()
+    setIsFav(favorites.includes(id))
+  }
+
+  const handleFavoriteChange = (id, isAdding) => {
+    setFavoriteLocal(prev => {
+      if (isAdding) return [...prev, id]
+      else return prev.filter(favId => favId !== id)
+    })
+  }
 
   async function toggleFavorite (e) {
     e.stopPropagation()
@@ -42,15 +41,11 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
     try {
       if (isFav) {
         await api.delete(`/api/favorite/${id}`)
-        setIsFav(false)
+        handleFavoriteChange(id, false)
       } else {
-        await api.post(`api/favorite/${id}`, {
-          googleId: id
-        })
-        setIsFav(true)
+        await api.post(`/api/favorite/${id}`, { googleId: id })
+        handleFavoriteChange(id, true)
       }
-
-      if (onChange) onChange(id)
     } catch (error) {
       console.error('Erro ao atualizar favorito:', error)
     }
@@ -58,7 +53,7 @@ const FavoriteButton = ({ id, button = false, onChange }) => {
 
   return (
     <span onClick={toggleFavorite}>
-      {checkToken ? (
+      {isLogged ? (
         button ? (
           !isFav ? (
             <button className='font-bold bg-blue-600 py-2.5 px-3 rounded text-white  hover:bg-blue-700 transition-all duration-200 cursor-pointer whitespace-nowrap ml-5'>

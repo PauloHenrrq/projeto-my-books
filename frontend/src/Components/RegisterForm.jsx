@@ -1,10 +1,12 @@
 import React, { useState, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
+import { AuthContext } from '../Context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
 import { api } from '../Routes/server/api'
 
 const RegisterForm = () => {
+  const {setUser} = useContext(AuthContext)
   const [authError, setAuthError] = useState(null)
   const [sucessPopUp, setSuccessPopUp] = useState(false)
   const {
@@ -17,16 +19,19 @@ const RegisterForm = () => {
   const navigate = useNavigate()
   const onSubmit = async data => {
     try {
-      await api.post('/api/user/register', {
+      const response = await api.post('/api/user/register', {
         userName: data.username,
         email: data.email,
         password: data.password
       })
+      const token = response.data.details.user.token;
+      localStorage.setItem("authToken", token);
       setAuthError(null)
       setSuccessPopUp(true)
+      setUser(true);
       setTimeout(() => {
         setSuccessPopUp(false)
-        navigate('/login')
+        navigate('/')
       }, 2000)
     } catch (erro) {
       setAuthError(erro.response.data.message || 'Erro ao registrar')

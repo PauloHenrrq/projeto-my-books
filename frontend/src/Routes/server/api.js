@@ -1,70 +1,85 @@
-import React from 'react'
-import axios from 'axios'
+import React from "react";
+import axios from "axios";
+import { getNavigate } from "../../../navigation";
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: "http://localhost:3000",
   headers: {
-    'Content-Type': 'application/json'
-  }
-})
+    "Content-Type": "application/json",
+  },
+});
 
 api.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('authToken')
+  (config) => {
+    const token = localStorage.getItem("authToken");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return config
+    return config;
   },
-  error => Promise.reject(error)
-)
+  (error) => Promise.reject(error)
+);
 
-export async function APIBooks (
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      localStorage.removeItem("authToken");
+      getNavigate()("/login");
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export async function APIBooks(
   queryFilter,
   query,
   filter = false,
   maxResult = 20,
   index = 0
 ) {
-  const isFree = filter ? '&filter=free-ebooks' : ''
+  const isFree = filter ? "&filter=free-ebooks" : "";
 
   try {
     if (!query) {
-      throw new Error('a pesquisa nao deve ser vazia')
+      throw new Error("a pesquisa nao deve ser vazia");
     }
     const res = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${queryFilter}${encodeURIComponent(
         query
       )}${isFree}&maxResults=${maxResult}&startIndex=${index}`
-    )
+    );
 
     if (!res.ok) {
-      throw new Error(`Erro HTTP! Status: ${res.status} - ${res.statusText}`)
+      throw new Error(`Erro HTTP! Status: ${res.status} - ${res.statusText}`);
     }
 
-    const data = await res.json()
+    const data = await res.json();
 
-    return data
+    return data;
   } catch (error) {
-    console.error('Ocorreu um erro ao buscar os livros:', error.message) // teste
-    throw new Error(error.message)
+    console.error("Ocorreu um erro ao buscar os livros:", error.message); // teste
+    throw new Error(error.message);
   }
 }
 
-export async function APIBooksId (id) {
+export async function APIBooksId(id) {
   try {
-    const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`)
+    const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
 
     if (!res.ok) {
-      throw new Error(`Erro HTTP! Status: ${res.status} - ${res.statusText}`)
+      throw new Error(`Erro HTTP! Status: ${res.status} - ${res.statusText}`);
     }
 
-    const data = await res.json()
+    const data = await res.json();
 
-    return data || []
+    return data || [];
   } catch (error) {
-    console.error('Ocorreu um erro ao buscar os livros:', error.message) // teste
-    throw new Error(error.message)
+    console.error("Ocorreu um erro ao buscar os livros:", error.message); // teste
+    throw new Error(error.message);
   }
 }
 

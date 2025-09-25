@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { api, APIBooksId } from '../../Routes/server/api'
 import BooksCard from './BooksCard'
 import BooksMain from './BooksMain'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../Context/AuthContext'
 
 const MyBooksMain = () => {
   const [books, setBooks] = useState([])
@@ -13,6 +14,7 @@ const MyBooksMain = () => {
   const [error, setError] = useState(false)
   const [reload, setReload] = useState(false)
   const token = localStorage.getItem('authToken')
+  const { favoriteLocal, favoriteLoading } = useContext(AuthContext)
 
   if (!token) {
     return (
@@ -32,36 +34,36 @@ const MyBooksMain = () => {
 
   useEffect(() => {
     const fetchBooks = async () => {
-      try {
-        const response = await api.get('/api/favorite')
-        const favorites = response.data.details.favorites
+      if (!favoriteLoading) {
+        try {
+          const promises = favoriteLocal.map(async fav => {
+            try {
+              const book = await APIBooksId(fav.googleId)
+              return book
+            } catch (error) {
+              console.error(`Erro ao buscar livros favoritos`, error)
+              return null
+            }
+          })
 
-        const promises = favorites.map(async fav => {
-          try {
-            const book = await APIBooksId(fav.googleId)
-            return book
-          } catch (error) {
-            console.error(`Erro ao buscar livros favoritos`, error)
-            return null
-          }
-        })
+          const results = await Promise.all(promises)
 
-        const results = await Promise.all(promises)
+          const validBooks = results.filter(book => book && book.volumeInfo)
 
-        const validBooks = results.filter(book => book && book.volumeInfo)
-
-        setBooks(validBooks)
-        setTotalItems(validBooks.length)
-      } catch (error) {
-        return
-      } finally {
-        setLoading(false)
-        setReload(false)
+          setBooks(validBooks)
+          setTotalItems(validBooks.length)
+          setLoading(false)
+        } catch (error) {
+          return
+        } finally {
+          setLoading(false)
+          setReload(false)
+        }
       }
-    }
 
+    }
     fetchBooks()
-  }, [reload])
+  }, [reload, favoriteLocal, !favoriteLoading])
 
   const applyFavoritesFilter = bookId => {
     const newBooks = books.filter(book => book.id != bookId)

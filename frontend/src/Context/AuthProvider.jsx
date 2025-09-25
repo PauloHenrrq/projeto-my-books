@@ -1,26 +1,53 @@
-import { useEffect, useState } from "react";
-import { AuthContext } from "./AuthContext";
+import { useEffect, useState } from 'react'
+import { AuthContext } from './AuthContext'
+import { api } from '../Routes/server/api'
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(false)
+  const [favoriteLocal, setFavoriteLocal] = useState([])
+  const [favoriteLoading, setFavoriteLoading] = useState(true)
 
   useEffect(() => {
-    const user = localStorage.getItem("authToken")
+    const user = localStorage.getItem('authToken')
     if (user) {
-      setUser(true);
+      setUser(true)
     }
-  }, [user]);
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      const favoriteLocal = async () => {
+        const response = await api.get('/api/favorite')
+        const favorites = response.data.details.favorites
+
+        setFavoriteLocal(favorites)
+        setFavoriteLoading(false)
+      }
+
+      favoriteLocal()
+    }
+  }, [user])
 
   const logout = () => {
-    localStorage.removeItem("authToken")
-    setUser(null);
-  };
+    localStorage.removeItem('authToken')
+    setUser(false)
+  }
 
-  const isLogged = Boolean(user);
+  const isLogged = Boolean(user)
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isLogged, logout }}>
+    <AuthContext.Provider
+      value={{
+        favoriteLocal,
+        setFavoriteLocal,
+        favoriteLoading,
+        user,
+        setUser,
+        isLogged,
+        logout
+      }}
+    >
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
